@@ -1,3 +1,4 @@
+/* 
 var config = {
     width: 800,
     height: 600,
@@ -48,3 +49,4 @@ function create ()
 
     emitter.startFollow(logo);
 }
+*/

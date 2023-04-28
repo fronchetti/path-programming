@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <title>VCU Experiment</title>
         <link rel="stylesheet" href="css/style.css">
-        <script
-            src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
         <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     </head>
     <body>
-
         <div class="container">
             <div id="language" class="language">
+                <div id="blockly-div" class="blockly-div"></div>
             </div>
             <div id="simulation" class="simulation">
                 <div id="game-canvas"></div>
             </div>
         </div>
 
-        <div id="blockly-canvas" class="blockly-canvas"></div>
         <xml id="toolbox" style="display: none">
             <category name="Text">
               <block type="string_length"></block>
             </category>
-          </xml>
+        </xml>
 
         <script src="js/simulation.js"></script>
-        <script src="js/blockly_setup.js"></script>
+        <script src="js/custom_workspace.js"></script>
     </body>
 </html>
