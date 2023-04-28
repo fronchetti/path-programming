@@ -10,13 +10,19 @@ let checkSubset = (parentArray, subsetArray) => {
 /* This extension fill the movement position dropdown with default field values. */
 Blockly.Extensions.register('move_block_fill_options',
 function() {
-  this.getInput('POSITION')
+  this
+  .getInput('POSITION')
   .appendField(new Blockly.FieldDropdown(
     function() {
       var options = [];
       options.push(["<somewhere>", 'UNDEFINED']);
-      options.push(["Home Position", 'HOME_POSITION']);
       options.push(["Create Position", "NEW_POSITION"]);
+      options.push(["Home Position", 'HOME_POSITION']);
+
+      for (let [mapPosition, mapValue] of mapPositions) {
+        options.push([mapPosition, mapValue]);
+      }
+
       return options;
     }), 'DROPDOWN_OPTIONS');
 });
@@ -47,8 +53,8 @@ function updateDropdownOptions(dropdownField) {
 
 function updateBlocks() {
   Blockly.getMainWorkspace().getBlocksByType("move_to_position").forEach(function(block) {
-    block.getField('DROPDOWN_OPTIONS');
-    updateDropdownOptions(block);
+    var dropdownField = block.getField('DROPDOWN_OPTIONS');
+    updateDropdownOptions(dropdownField);
   });  
 }
 
@@ -65,6 +71,7 @@ Blockly.Extensions.register('move_block_warning_on_change', function() {
         updateDropdownOptions(dropdownField);
         dropdownField.doValueUpdate_(positionName.toUpperCase());
         dropdownField.forceRerender(); // Required instruction as it updates the dropdown visually 
+        updateBlocks();
       }
     } else {
       this.setWarningText('Must have an input block.');
