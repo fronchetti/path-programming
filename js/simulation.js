@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 
 var config = {
     width: 800,
@@ -7,7 +6,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 }
+            debug: true
         }
     },
     scale: {
@@ -15,34 +14,44 @@ var config = {
     },
     scene: {
         preload: preload,
-        create: create
+        create: create,
+        update: update
     }
 };
 
 const game = new Phaser.Game(config);
 
-function preload ()
+function preload()
 {
-    this.load.setBaseURL('http://labs.phaser.io');
+    this.load.image('robot', 'assets/robot.png');
 }
 
-function create ()
+function create()
 {
-    this.add.image(400, 300, 'sky');
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.player = this.physics.add.image(400, 300, 'block');
+    this.player.setCollideWorldBounds(true);
+}
 
-    var particles = this.add.particles('red');
+function update ()
+{
+    this.player.setVelocity(0);
 
-    var emitter = particles.createEmitter({
-        speed: 100,
-        scale: { start: 1, end: 0 },
-        blendMode: 'ADD'
-    });
+    if (this.cursors.left.isDown)
+    {
+        this.player.setVelocityX(-300);
+    }
+    else if (this.cursors.right.isDown)
+    {
+        this.player.setVelocityX(300);
+    }
 
-    var logo = this.physics.add.image(400, 100, 'logo');
-
-    logo.setVelocity(100, 200);
-    logo.setBounce(1, 1);
-    logo.setCollideWorldBounds(true);
-
-    emitter.startFollow(logo);
+    if (this.cursors.up.isDown)
+    {
+        this.player.setVelocityY(-300);
+    }
+    else if (this.cursors.down.isDown)
+    {
+        this.player.setVelocityY(300);
+    }
 }
