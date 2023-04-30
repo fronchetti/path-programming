@@ -1,21 +1,27 @@
 body {
-  background-color: #f1f1f1;
+  background-color: rgb(242, 242, 242) !important;
 }
 
 .container-fluid {
-  padding: 25px !important;
-  padding-left: 15px !important;
+  padding: 25px;
 }
 
 .blockly-workspace {
   height: 800px;
 }
 
+.game-canvas {
+  border-radius: 15px;
+}
+
+/* Blockly workspace */
 .injectionDiv {
   border-radius: 0.5rem;
 }
 
+.language {
+  padding: 15px;
+}
+
 .simulation {
-  border-radius: 0.5rem;
-  background-color: rgb(24, 24, 24);
 }

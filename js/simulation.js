@@ -1,6 +1,6 @@
 
 var config = {
-    width: 800,
+    width: 600,
     height: 600,
     parent: 'game-canvas',
     physics: {
@@ -23,13 +23,14 @@ const game = new Phaser.Game(config);
 
 function preload()
 {
-    this.load.image('robot', 'assets/robot.png');
+    this.load.image('robot', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/robot.png?token=GHSAT0AAAAAABQOGQYVKY42KLGBDY7C5U7IZCOAAKQ');
 }
 
 function create()
 {
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.player = this.physics.add.image(400, 300, 'block');
+    this.player = this.physics.add.image(100, 100, 'robot');
+    this.player.scale = 0.1;
     this.player.setCollideWorldBounds(true);
 }
 
@@ -45,8 +46,7 @@ function update ()
     {
         this.player.setVelocityX(300);
     }
-
-    if (this.cursors.up.isDown)
+    else if (this.cursors.up.isDown)
     {
         this.player.setVelocityY(-300);
     }
