@@ -1,0 +1,40 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "#floor": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
+        "#floor_tiles": {
+            "scaleInDock": 8
+        },
+        "floor.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        }
+    },
+    "last.imagePath": "C:/Users/fronchettl/Documents/GitHub/robot-position-experiment/assets",
+    "map.height": 10,
+    "map.tileHeight": 32,
+    "map.tileWidth": 32,
+    "map.width": 10,
+    "openFiles": [
+    ],
+    "project": "test_level.tiled-project",
+    "recentFiles": [
+        "floor.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
+}
