@@ -24,8 +24,8 @@ const game = new Phaser.Game(config);
 function preload()
 {
     this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/test_map.tmj');
-    this.load.image('floor-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
+    this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
+    this.load.image('ground-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
     this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/objects_texture.png?raw=true');
 }
 
@@ -34,9 +34,9 @@ function create()
     this.cursors = this.input.keyboard.createCursorKeys();
 
     var map = this.make.tilemap({ key: 'map' });
-    var groundTileset = map.addTilesetImage('floor', 'floor-tiles');
+    var groundTileset = map.addTilesetImage('ground', 'ground-tiles');
     var objectsTileset = map.addTilesetImage('objects', 'objects-tiles');
-    var groundLayer = map.createLayer('floor', groundTileset);
+    var groundLayer = map.createLayer('ground', groundTileset);
     var objectsLayer = map.createLayer('objects', objectsTileset);
 
     this.robot = this.physics.add.sprite(160, 160, 'robot');
