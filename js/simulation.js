@@ -34,10 +34,10 @@ function create()
     this.cursors = this.input.keyboard.createCursorKeys();
 
     var map = this.make.tilemap({ key: 'map' });
-    var tileset = map.addTilesetImage('floor', 'floor-tiles');
-    var tileset = map.addTilesetImage('objects', 'objects-tiles');
-    var groundLayer = map.createLayer('floor', tileset);
-    var objectLayer = map.createLayer('objects', tileset);
+    var groundTileset = map.addTilesetImage('floor', 'floor-tiles');
+    var objectsTileset = map.addTilesetImage('objects', 'objects-tiles');
+    var groundLayer = map.createLayer('floor', groundTileset);
+    var objectsLayer = map.createLayer('objects', objectsTileset);
 
     this.robot = this.physics.add.sprite(160, 160, 'robot');
     
