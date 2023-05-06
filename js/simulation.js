@@ -23,19 +23,21 @@ const game = new Phaser.Game(config);
 
 function preload()
 {
-    this.load.spritesheet('robot', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/robot.png?raw=true', { frameWidth: 32, frameHeight: 32 });
-    this.load.tilemapTiledJSON('floor', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/test_map.tmj');
-    this.load.image('tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
+    this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/test_map.tmj');
+    this.load.image('floor-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
+    this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
 }
 
 function create()
 {
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    var map = this.make.tilemap({ key: 'floor' });
-    var tileset = map.addTilesetImage('floor', 'tiles');
+    var map = this.make.tilemap({ key: 'map' });
+    var tileset = map.addTilesetImage('floor', 'floor-tiles');
+    var tileset = map.addTilesetImage('objects', 'objects-tiles');
     var groundLayer = map.createLayer('floor', tileset);
-    // var objectLayer = map.createLayer('boxes', tileset);
+    var objectLayer = map.createLayer('objects', tileset);
 
     this.robot = this.physics.add.sprite(160, 160, 'robot');
     
