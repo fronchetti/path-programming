@@ -23,15 +23,20 @@ const game = new Phaser.Game(config);
 
 function preload()
 {
-    this.load.image('floor', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor.png');
     this.load.spritesheet('robot', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/robot.png?raw=true', { frameWidth: 32, frameHeight: 32 });
-    this.load.tilemapTiledJSON('map', 'assets/map.json');
-
+    this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/test_map.tmj');
+    this.load.image('tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor.png?raw=true');
 }
 
 function create()
 {
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    var map = this.make.tilemap({ key: 'map' });
+    var tileset = map.addTilesetImage('floor', 'tiles');
+    var groundLayer = map.createLayer('map', tileset);
+    var objectLayer = map.createLayer('boxes', tileset);
+    
     this.robot = this.physics.add.sprite(160, 160, 'robot');
     
     this.anims.create({

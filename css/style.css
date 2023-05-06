@@ -20,7 +20,7 @@ body {
 }
 
 .display {
-  background-color: black;
+  background-color: rgb(151, 151, 151);
   border-radius: 0.5rem;
   padding: 15px;
   margin: 15px;
