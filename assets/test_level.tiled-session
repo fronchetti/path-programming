@@ -22,8 +22,9 @@
     },
     "last.imagePath": "C:/Users/fronchettl/Documents/GitHub/robot-position-experiment/assets",
     "map.height": 10,
-    "map.tileHeight": 32,
-    "map.tileWidth": 32,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
     "map.width": 10,
     "openFiles": [
     ],
@@ -34,7 +35,7 @@
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 32,
-        "width": 32
+        "height": 64,
+        "width": 64
     }
 }

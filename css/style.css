@@ -7,11 +7,7 @@ body {
 }
 
 .blockly-workspace {
-  height: 800px;
-}
-
-.game-canvas {
-  border-radius: 15px;
+  height: 608px;
 }
 
 /* Blockly workspace */
@@ -23,5 +19,9 @@ body {
   padding: 15px;
 }
 
-.simulation {
+.display {
+  background-color: black;
+  border-radius: 0.5rem;
+  padding: 15px;
+  margin: 15px;
 }
