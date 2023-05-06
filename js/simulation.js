@@ -23,8 +23,10 @@ const game = new Phaser.Game(config);
 
 function preload()
 {
-    this.load.image('floor', 'https://i.imgur.com/4Qvn5sX.png');
-    this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.image('floor', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor.png');
+    this.load.spritesheet('robot', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/robot.png?raw=true', { frameWidth: 32, frameHeight: 32 });
+    this.load.tilemapTiledJSON('map', 'assets/map.json');
+
 }
 
 function create()

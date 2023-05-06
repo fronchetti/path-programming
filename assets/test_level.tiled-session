@@ -22,7 +22,7 @@
     },
     "last.imagePath": "C:/Users/fronchettl/Documents/GitHub/robot-position-experiment/assets",
     "map.height": 10,
-    "map.lastUsedFormat": "tmx",
+    "map.lastUsedFormat": "json",
     "map.tileHeight": 64,
     "map.tileWidth": 64,
     "map.width": 10,
