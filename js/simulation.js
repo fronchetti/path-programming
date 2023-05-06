@@ -1,7 +1,7 @@
 
 var config = {
-    width: 640,
-    height: 640,
+    width: 2048,
+    height: 2048,
     parent: 'game-canvas',
     physics: {
         default: 'arcade',
@@ -26,7 +26,7 @@ function preload()
     this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
     this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/test_map.tmj');
     this.load.image('floor-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
-    this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
+    this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/objects_texture.png?raw=true');
 }
 
 function create()
