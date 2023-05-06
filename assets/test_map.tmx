@@ -3,7 +3,7 @@
  <tileset firstgid="1" name="floor" tilewidth="64" tileheight="64" tilecount="100" columns="10">
   <image source="floor_texture.png" width="640" height="640"/>
  </tileset>
- <layer id="1" name="map" width="10" height="10">
+ <layer id="1" name="floor" width="10" height="10">
   <data encoding="csv">
 1,2,3,4,5,6,7,8,9,10,
 11,12,13,14,15,16,17,18,19,20,

@@ -25,7 +25,7 @@ function preload()
 {
     this.load.spritesheet('robot', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/robot.png?raw=true', { frameWidth: 32, frameHeight: 32 });
     this.load.tilemapTiledJSON('floor', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/test_map.tmj');
-    this.load.image('tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor.png?raw=true');
+    this.load.image('tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/floor_texture.png?raw=true');
 }
 
 function create()
