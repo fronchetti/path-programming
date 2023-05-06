@@ -35,8 +35,8 @@ function create()
     var map = this.make.tilemap({ key: 'map' });
     var tileset = map.addTilesetImage('floor', 'tiles');
     var groundLayer = map.createLayer('map', tileset);
-    var objectLayer = map.createLayer('boxes', tileset);
-    
+    // var objectLayer = map.createLayer('boxes', tileset);
+
     this.robot = this.physics.add.sprite(160, 160, 'robot');
     
     this.anims.create({
