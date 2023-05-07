@@ -37,7 +37,7 @@ function create()
     var markersLayer = map.createLayer('markers', tileset);
     var boxesLayer = map.createLayer('boxes', tileset);
 
-    this.robot = this.physics.add.sprite(160, 160, 'robot');
+    this.robot = this.physics.add.sprite(384, 384, 'robot');
     
     this.anims.create({
         key: 'up',
@@ -89,6 +89,7 @@ function create()
       });
 
     this.robot.setCollideWorldBounds(true);
+    this.robot.anims.play("right");
 }
 
 function update ()
