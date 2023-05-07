@@ -22,7 +22,7 @@ const game = new Phaser.Game(config);
 
 function preload()
 {
-    this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 384, frameHeight: 384 });
+    this.load.spritesheet('robot', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/robot.png?raw=true', { frameWidth: 256, frameHeight: 256 });
     this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
     this.load.image('tileset', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
 }
@@ -41,25 +41,25 @@ function create()
     
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('robot', { start: 5, end: 6 }),
+        frames: this.anims.generateFrameNumbers('robot', { start: 2, end: 2 }),
         frameRate: 2,
         repeat: -1
       });
       this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('robot', { start: 2, end: 3 }),
+        frames: this.anims.generateFrameNumbers('robot', { start: 3, end: 3 }),
         frameRate: 2,
         repeat: -1
       });
       this.anims.create({
         key: 'up',
-        frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 1 }),
+        frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 0 }),
         frameRate: 2,
         repeat: -1
       });
       this.anims.create({
         key: 'down',
-        frames: this.anims.generateFrameNumbers('robot', { start: 7, end: 8}),
+        frames: this.anims.generateFrameNumbers('robot', { start: 1, end: 1}),
         frameRate: 2,
         repeat: -1
       });
