@@ -24,8 +24,7 @@ function preload()
 {
     this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
     this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
-    this.load.image('ground-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
-    this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
+    this.load.image('tileset', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
 }
 
 function create()
@@ -33,10 +32,10 @@ function create()
     this.cursors = this.input.keyboard.createCursorKeys();
 
     var map = this.make.tilemap({ key: 'map' });
-    var groundTileset = map.addTilesetImage('ground', 'ground-tiles');
-    var objectsTileset = map.addTilesetImage('objects', 'objects-tiles');
-    var groundLayer = map.createLayer('ground', groundTileset);
-    var objectsLayer = map.createLayer('objects', objectsTileset);
+    var tileset = map.addTilesetImage('ground_texture', 'tileset');
+    var groundLayer = map.createLayer('ground', tileset);
+    var markersLayer = map.createLayer('markers', tileset);
+    var boxesLayer = map.createLayer('boxes', tileset);
 
     this.robot = this.physics.add.sprite(160, 160, 'robot');
     
