@@ -95,7 +95,27 @@ function update ()
 {
     this.robot.setVelocity(0);
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown && this.cursors.down.isDown) {
+        this.robot.setVelocityX(-200);
+        this.robot.setVelocityY(200);
+        this.robot.anims.play("down-left");
+    }
+    else if (this.cursors.right.isDown && this.cursors.down.isDown) {
+        this.robot.setVelocityX(200);
+        this.robot.setVelocityY(200);
+        this.robot.anims.play("down-right");
+    }
+    else if (this.cursors.left.isDown && this.cursors.up.isDown) {
+        this.robot.setVelocityX(-200);
+        this.robot.setVelocityY(-200);
+        this.robot.anims.play("up-left");
+    }
+    else if (this.cursors.right.isDown && this.cursors.up.isDown) {
+        this.robot.setVelocityX(200);
+        this.robot.setVelocityY(-200);
+        this.robot.anims.play("up-right");
+    }
+    else if (this.cursors.left.isDown) {
         this.robot.setVelocityX(-300);
         this.robot.anims.play("left");
     }
