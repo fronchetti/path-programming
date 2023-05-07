@@ -1,4 +1,3 @@
-
 var config = {
     width: 2048,
     height: 2048,
@@ -26,7 +25,7 @@ function preload()
     this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
     this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
     this.load.image('ground-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
-    this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/objects_texture.png?raw=true');
+    this.load.image('objects-tiles', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
 }
 
 function create()
