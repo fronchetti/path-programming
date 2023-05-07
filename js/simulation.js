@@ -40,32 +40,55 @@ function create()
     this.robot = this.physics.add.sprite(160, 160, 'robot');
     
     this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('robot', { start: 2, end: 2 }),
-        frameRate: 2,
-        repeat: -1
-      });
-      this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('robot', { start: 3, end: 3 }),
-        frameRate: 2,
-        repeat: -1
-      });
-      this.anims.create({
         key: 'up',
         frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 0 }),
         frameRate: 2,
         repeat: -1
       });
-      this.anims.create({
+    this.anims.create({
+        key: 'up-right',
+        frames: this.anims.generateFrameNumbers('robot', { start: 1, end: 1 }),
+        frameRate: 2,
+        repeat: -1
+      });
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('robot', { start: 2, end: 2 }),
+        frameRate: 2,
+        repeat: -1
+      });
+    this.anims.create({
+        key: 'down-right',
+        frames: this.anims.generateFrameNumbers('robot', { start: 3, end: 3 }),
+        frameRate: 2,
+        repeat: -1
+      });
+    this.anims.create({
         key: 'down',
-        frames: this.anims.generateFrameNumbers('robot', { start: 1, end: 1}),
+        frames: this.anims.generateFrameNumbers('robot', { start: 4, end: 4 }),
+        frameRate: 2,
+        repeat: -1
+      });
+    this.anims.create({
+        key: 'down-left',
+        frames: this.anims.generateFrameNumbers('robot', { start: 5, end: 5 }),
+        frameRate: 2,
+        repeat: -1
+      });
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('robot', { start: 6, end: 6 }),
+        frameRate: 2,
+        repeat: -1
+      });
+    this.anims.create({
+        key: 'up-left',
+        frames: this.anims.generateFrameNumbers('robot', { start: 7, end: 7 }),
         frameRate: 2,
         repeat: -1
       });
 
-      this.robot.setCollideWorldBounds(true);
-      this.robot.setScale(2);
+    this.robot.setCollideWorldBounds(true);
 }
 
 function update ()
