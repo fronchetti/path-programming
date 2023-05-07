@@ -22,7 +22,7 @@ const game = new Phaser.Game(config);
 
 function preload()
 {
-    this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('robot', 'https://i.imgur.com/mb4zipF.png', { frameWidth: 384, frameHeight: 384 });
     this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
     this.load.image('tileset', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
 }
