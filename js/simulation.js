@@ -5,7 +5,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false
         }
     },
     scale: {
@@ -23,9 +23,9 @@ const game = new Phaser.Game(config);
 function preload()
 {
     this.load.spritesheet('gripper', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/gripper.png?raw=true', { frameWidth: 256, frameHeight: 256 });
-    this.load.spritesheet('boxes', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true', { frameWidth: 256, frameHeight: 256 });
+    this.load.spritesheet('boxes', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/boxes.png?raw=true', { frameWidth: 256, frameHeight: 256 });
     this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
-    this.load.image('tileset', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/ground_texture.png?raw=true');
+    this.load.image('tileset', 'https://github.com/fronchetti/path-planning-web/blob/main/assets/boxes.png?raw=true');
 }
 
 function create()
@@ -35,15 +35,15 @@ function create()
 
     /* Create the map */
     var map = this.make.tilemap({ key: 'map' });
-    var tileset = map.addTilesetImage('ground_texture', 'tileset');
+    var tileset = map.addTilesetImage('boxes', 'tileset');
     var groundLayer = map.createLayer('ground', tileset);
     var markersLayer = map.createLayer('markers', tileset);
 
     /* Gripper and boxes are considered sprites */
-    this.boxA = this.physics.add.sprite(1600, 1600, 'boxes', 4);
-    this.boxB = this.physics.add.sprite(800, 900, 'boxes', 5);
-    this.boxC = this.physics.add.sprite(1300, 1850, 'boxes', 6);
-    this.boxD = this.physics.add.sprite(700, 200, 'boxes', 7);
+    this.boxA = this.physics.add.sprite(1600, 1600, 'boxes', 5);
+    this.boxB = this.physics.add.sprite(800, 900, 'boxes', 6);
+    this.boxC = this.physics.add.sprite(1300, 1850, 'boxes', 7);
+    this.boxD = this.physics.add.sprite(700, 200, 'boxes', 8);
     this.gripper = this.physics.add.sprite(384, 384, 'gripper');
     this.gripper.setScale(1.5);
     
