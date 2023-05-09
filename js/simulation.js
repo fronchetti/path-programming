@@ -45,7 +45,8 @@ function create()
     this.boxC = this.physics.add.sprite(1300, 1850, 'boxes', 6);
     this.boxD = this.physics.add.sprite(700, 200, 'boxes', 7);
     this.gripper = this.physics.add.sprite(384, 384, 'gripper');
-
+    this.gripper.setScale(1.5);
+    
     this.gripper.setCollideWorldBounds(true);
 
     /* Make boxes immovable */
