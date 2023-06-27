@@ -18,7 +18,13 @@
     </head>
     <body>
         <div class="container-fluid">
-            <div class="row">
+          <div class="row">
+            <h1>Sandbox</h1>
+            <p>On your right side, there is our block-based environment. Use it to write code that should be executed by the gripper in the simulation panel on the left side.
+               Using your mouse cursor, you are able to reposition the gripper in the simulation panel. Use the "Manage positions" button to create or update gripper positions.</p>
+          </div>
+
+          <div class="row">
                 <div class="language col-8">
                     <div id="blockly-workspace" class="blockly-workspace"></div>
                 </div>
@@ -31,6 +37,10 @@
         </div>
 
         <xml id="toolbox" style="display: none">
+        </xml>
+
+        <xml id="blocks" style="display: none">
+          <block type="custom_start" id="START" x="-250" y="-150"></block>
         </xml>
 
         <!-- List of positions (Modal) -->
@@ -65,18 +75,18 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title"><i class="fa-solid fa-plus"></i> Create Position</h5>
+                  <h5 class="modal-title">Create Position</h5>
                 </div>
                 <div class="modal-body">
                     <form class="row g-3">
                         <div class="col-12">
-                          <label for="position-name" class="form-label">First, give the position a name:</label>
-                          <input type="text" class="form-control" id="position-name" placeholder="Target" required>
+                          <label for="position-name" class="form-label">Give the position a name:</label>
+                          <input type="text" class="form-control" id="position-name" placeholder="Name" required>
                         </div>
                         <div class="col-12">
                             <div class="container">
                                 <div class="row">
-                                    <button id="create-position-button" class="btn btn-primary btn-lg" onclick="createPosition()">Next</button>
+                                    <button type="button" id="create-position-button" class="btn btn-primary btn-lg">Next</button>
                                 </div>    
                             </div>
                         </div>
@@ -88,7 +98,9 @@
             </div>
           </div>
 
-        <script src="js/simulation.js"></script>
-        <script src="js/custom_workspace.js"></script>
+        <script src="js/initial_setup.js"></script>
+        <script src="js/bootstrap_setup.js"></script>
+        <script src="js/phaser_setup.js"></script>
+        <script src="js/blockly_setup.js"></script>
     </body>
 </html>

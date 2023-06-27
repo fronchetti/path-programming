@@ -1,21 +1,19 @@
 class Sandbox extends Phaser.Scene {
     constructor() {
-        super('sandbox');
+        super('Sandbox');
         this.isMouseDown = false;
-        this.savedPositions = [];
+        this.savedActions = [];
         this.positionLabels = [];
     }
     
-    preload()
-    {
+    preload() {
         this.load.spritesheet('gripper', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/gripper.png', { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('boxes', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/boxes.png', { frameWidth: 256, frameHeight: 256 });
         this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
         this.load.image('tileset', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/boxes.png');
     }
     
-    create()
-    {
+    create() {
         /* Create the level */
         var map = this.make.tilemap({ key: 'map' });
         var tileset = map.addTilesetImage('boxes', 'tileset');
@@ -31,6 +29,7 @@ class Sandbox extends Phaser.Scene {
         
         /* Gripper settings */
         this.gripper.setScale(1.5);
+        this.gripper.setInteractive();
         this.gripper.setCollideWorldBounds(true);
         
         /* Bounding sizes */
@@ -57,18 +56,6 @@ class Sandbox extends Phaser.Scene {
         var directionsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         var labelsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
 
-        /* Save positions when space key is pressed */
-        spaceKey.on('down', function () {
-            this.savedPositions.push({ x: this.gripper.x, y: this.gripper.y });
-        }, this);
-        
-        /* Execute positions when enter key is pressed */
-        enterKey.on('down', function () {
-            if (this.savedPositions.length > 0) {
-                this.executeGripperAnimation();
-            }
-        }, this);
-
         /* Display directions */
         directionsKey.on('down', function () {
             this.drawDirections();
@@ -82,30 +69,41 @@ class Sandbox extends Phaser.Scene {
         /* Arrow drawing */
         this.directionGraphics = this.add.graphics();
         this.labelGraphics = this.add.graphics();
-
     }
     
-    update()
-    {
+    update() {
         if (this.isMouseDown) {
             this.gripper.x = this.input.activePointer.worldX;
             this.gripper.y = this.input.activePointer.worldY;
         }
     }
+
+    getGripperPosition() {
+        return [this.gripper.x, this.gripper.y]
+    }
+
+    appendAction(action_type, coordinates) {
+        this.savedActions.push([action_type, coordinates]);
+    }
     
     executeGripperAnimation() {
-        const nextPosition = this.savedPositions.shift();
+        const nextAction = this.savedActions.shift();
         
-        if (nextPosition) {
-            this.tweens.add({
-                targets: this.gripper,
-                x: nextPosition.x,
-                y: nextPosition.y,
-                duration: 1000,
-                onComplete: () => {
-                    this.executeGripperAnimation(); // Move to each saved position recursively
-                }
-            });
+        if (nextAction) {
+            var action_type = nextAction[0];
+            var coordinates = nextAction[1];
+            
+            if (action_type === "move_to_position") {
+                this.tweens.add({
+                    targets: this.gripper,
+                    x: coordinates[0],
+                    y: coordinates[1],
+                    duration: 1000,
+                    onComplete: () => {
+                        this.executeGripperAnimation(); // Move to each saved position recursively
+                    }
+                });
+            } 
         } else {
             console.log('Finished gripper animation.');
         }
@@ -116,9 +114,9 @@ class Sandbox extends Phaser.Scene {
         this.positionLabels.forEach(label => label.destroy());
         this.positionLabels = [];
         
-        for (let i = 0; i < this.savedPositions.length; i++) {
+        for (let i = 0; i < this.savedActions.length; i++) {
             // Create and position the text object
-            const currentPosition = this.savedPositions[i];
+            const currentPosition = this.savedActions[i];
             this.labelGraphics.fillStyle(0xff0000, 1); // Circle
             this.labelGraphics.fillCircle(currentPosition.x, currentPosition.y, 50);
             const text = this.add.text(currentPosition.x, currentPosition.y, String(i), { color: '#ffffff', fontSize: '80px', fontWeight: 'bold', fontFamily: 'Verdana' }).setOrigin(0.5);
@@ -134,9 +132,9 @@ class Sandbox extends Phaser.Scene {
         /* Clear previous drawings */
         this.directionGraphics.clear();
         
-        for (let i = 0; i < this.savedPositions.length - 1; i++) {
-            const currentPosition = this.savedPositions[i];
-            const nextPosition = this.savedPositions[i + 1];
+        for (let i = 0; i < this.savedActions.length - 1; i++) {
+            const currentPosition = this.savedActions[i];
+            const nextPosition = this.savedActions[i + 1];
             
             const angle = Phaser.Math.Angle.Between(currentPosition.x, currentPosition.y, nextPosition.x, nextPosition.y);
             
@@ -172,10 +170,11 @@ class Sandbox extends Phaser.Scene {
     }
 }
 
-var config = {
+var config = { 
     width: 2048,
     height: 2048,
     parent: 'game-canvas',
+    scene: [Sandbox],
     physics: {
         default: 'arcade',
         arcade: {
@@ -185,8 +184,9 @@ var config = {
     scale: {
         mode: Phaser.Scale.FIT,
     },
+    loader: {
+        crossOrigin: 'anonymous'
+    },
 };
 
-const game = new Phaser.Game(config);
-game.scene.add('sandbox', Sandbox);
-game.scene.start('sandbox');
+var game = new Phaser.Game(config);
