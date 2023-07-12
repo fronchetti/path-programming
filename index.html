@@ -11,8 +11,6 @@
         <script src="blockly/blockly_compressed.js"></script>
         <script src="blockly/javascript_compressed.js"></script>
         <script src="blockly/msg/en.js"></script>
-        <!-- Font Awesome -->
-        <script src="https://kit.fontawesome.com/3d9da8be4a.js" crossorigin="anonymous"></script>
         <!-- Phaser -->
         <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     </head>
@@ -20,8 +18,7 @@
         <div class="container-fluid">
           <div class="row">
             <h1>Sandbox</h1>
-            <p>On your right side, there is our block-based environment. Use it to write code that should be executed by the gripper in the simulation panel on the left side.
-               Using your mouse cursor, you are able to reposition the gripper in the simulation panel. Use the "Manage positions" button to create or update gripper positions.</p>
+            <p>Use this space as a playground.</p>
           </div>
 
           <div class="row">
@@ -43,23 +40,18 @@
           <block type="custom_start" id="START" x="-250" y="-150"></block>
         </xml>
 
-        <!-- List of positions (Modal) -->
+        <!-- Modal - Edit positions -->
         <div class="modal fade" id="list-positions-modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Manage Positions</h5>
+                  <h5 class="modal-title">Edit Positions</h5>
                 </div>
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <button type="button" class="btn btn-primary btn-lg" data-bs-target="#create-position-modal" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fa-solid fa-plus"></i> Create Position</button>
-                        </div>
-                        <br>
-                        <p>Existing positions:</p>
-                        <div class="row">
                             <div id="positions-list" class="list-group">
-                                <!-- Filled dynamically in custom_workspace.js -->
+                                <!-- Filled dynamically in bootstrap_setup.js -->
                             </div>
                         </div>
                     </div>
@@ -70,7 +62,7 @@
             </div>
           </div>
 
-          <!-- Create new position (Modal) -->
+          <!-- Modal - Create position -->
           <div class="modal fade" id="create-position-modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -86,7 +78,7 @@
                         <div class="col-12">
                             <div class="container">
                                 <div class="row">
-                                    <button type="button" id="create-position-button" class="btn btn-primary btn-lg">Next</button>
+                                    <button type="button" id="create-position-button" class="btn btn-primary btn-lg">Create</button>
                                 </div>    
                             </div>
                         </div>

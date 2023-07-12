@@ -8,7 +8,7 @@ savedVariables.set("Home", "HOME_POSITION");
 In the example below, "HOME_POSITION" is the language-neutral key from Blockly, 
 and [0, 0] the coordinates in Phaser. */
 const savedCoordinates = new Map();
-savedCoordinates.set("HOME_POSITION", [0, 0])
+savedCoordinates.set("HOME_POSITION", [1024, 1024])
 
 function createNewPosition(name, key, coordinates) {
     if (name === undefined || key == undefined || coordinates === undefined) {

@@ -7,7 +7,7 @@ body {
 }
 
 .blockly-workspace {
-  height: 608px;
+  height: 600px;
 }
 
 /* Blockly workspace */
@@ -21,7 +21,7 @@ body {
 
 .display {
   background-color: rgb(186, 186, 186);
-  border-radius: 0.5rem;
+  border-radius: 1.5rem;
   padding: 15px;
-  margin: 15px;
+  margin-top: 15px;
 }

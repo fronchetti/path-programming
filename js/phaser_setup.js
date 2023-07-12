@@ -27,7 +27,7 @@ class Sandbox extends Phaser.Scene {
         this.boxD = this.physics.add.sprite(700, 200, 'boxes', 8);
 
         /* Gripper settings */
-        this.gripper = this.physics.add.sprite(384, 384, 'gripper');
+        this.gripper = this.physics.add.sprite(1024, 1024, 'gripper');
         this.gripper.setScale(1.5);
         this.gripper.setInteractive();
         this.gripper.body.setSize(168, 168);
@@ -80,8 +80,8 @@ class Sandbox extends Phaser.Scene {
         return [this.gripper.x, this.gripper.y]
     }
 
-    appendAction(action_type, coordinates) {
-        this.savedActions.push([action_type, coordinates]);
+    appendAction(action_type, coordinates, block_id) {
+        this.savedActions.push([action_type, coordinates, block_id]);
     }
     
     executeGripperAnimation() {
@@ -90,6 +90,9 @@ class Sandbox extends Phaser.Scene {
         if (nextAction) {
             var action_type = nextAction[0];
             var coordinates = nextAction[1];
+            var block_id = nextAction[2];
+
+            blocklyWorkspace.highlightBlock(block_id);
             
             if (action_type === "move_to_position") {
                 this.tweens.add({
@@ -117,7 +120,13 @@ class Sandbox extends Phaser.Scene {
                     }
                 }
 
-                this.executeGripperAnimation();
+                this.time.addEvent({
+                    delay: 1000,
+                    callback: ()=>{
+                        this.executeGripperAnimation();
+                    },
+                    loop: false
+                })
             }
             else if (action_type === "release_object") {
                 this.container.each(function(box) {
@@ -126,7 +135,14 @@ class Sandbox extends Phaser.Scene {
 
                 this.container.removeAll(); /* Clear container */
                 this.children.bringToTop(this.gripper);
-                this.executeGripperAnimation();
+
+                this.time.addEvent({
+                    delay: 1000,
+                    callback: ()=>{
+                        this.executeGripperAnimation();
+                    },
+                    loop: false
+                })
             }
         } else {
             console.log('Finished gripper animation.');
@@ -202,7 +218,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false,
         }
     },
     scale: {

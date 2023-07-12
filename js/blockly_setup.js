@@ -59,7 +59,7 @@ Blockly.defineBlocksWithJsonArray([
   },
   {
     "type": "move_to_position",
-    "message0": "Move robot to %1",
+    "message0": "Move gripper to %1",
     "args0": [
       {
         "type": "input_dummy",
@@ -78,7 +78,7 @@ Blockly.defineBlocksWithJsonArray([
   /* Custom pick object block */
   {
     "type": "pick_object",
-    "message0": "Pick object",
+    "message0": "Pick up object",
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
@@ -110,7 +110,7 @@ const toolbox = {
     },
     {
       "kind": "button",
-      "text": "Run Program",
+      "text": "Start Program",
       "callbackKey": "run-program"
     },
     {
@@ -120,16 +120,12 @@ const toolbox = {
     },
     {
       "kind": "button",
-      "text": "Manage Positions",
+      "text": "Edit Positions",
       "callbackKey": "manage-positions",
     },
     {
       "kind": "label",
       "text": "Blocks",
-    },
-    {
-      "kind": "block",
-      "type": "move_to_position"
     },
     {
       "kind": "block",
@@ -139,6 +135,10 @@ const toolbox = {
       "kind": "block",
       "type": "release_object"
     },
+    {
+      "kind": "block",
+      "type": "move_to_position"
+    },
   ]
 }
 
@@ -146,18 +146,25 @@ const blocklyDiv = document.getElementById('blockly-workspace');
 const blocklyWorkspace = Blockly.inject(blocklyDiv, {
           toolbox: toolbox, zoom:
           {controls: true,
-          wheel: true,
           startScale: 1.5,
           maxScale: 3,
           minScale: 0.3,
           scaleSpeed: 1.2,
           pinch: true},
+          move: {
+            scrollbars: {
+              horizontal: true,
+              vertical: true
+            },
+            drag: true,
+            wheel: false},
           trashcan: true});
 
 var startingBlocks = document.getElementById("blocks");
 Blockly.Xml.domToWorkspace(startingBlocks, blocklyWorkspace);
 
 var rootBlock = Blockly.getMainWorkspace().getBlocksByType("custom_start")[0];
+blocklyWorkspace.centerOnBlock(rootBlock.id);
 rootBlock.setDeletable(false);
 
 blocklyWorkspace.registerButtonCallback("run-program", executeBlocklyCode);
@@ -175,13 +182,13 @@ function executeBlocklyCode() {
       if (block.type === "move_to_position") {
         var positionName = block.getFieldValue("DROPDOWN_OPTIONS");
         var positionCoordinates = savedCoordinates.get(positionName);
-        currentScene.appendAction(block.type, positionCoordinates);
+        currentScene.appendAction(block.type, positionCoordinates, block.id);
       }
-      if (block.type === "pick_object") {
-        currentScene.appendAction(block.type, undefined);
+      else if (block.type === "pick_object") {
+        currentScene.appendAction(block.type, undefined, block.id);
       }
-      if (block.type === "release_object") {
-        currentScene.appendAction(block.type, undefined);
+      else if (block.type === "release_object") {
+        currentScene.appendAction(block.type, undefined, block.id);
       }
     }
 
