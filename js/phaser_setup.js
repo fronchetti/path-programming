@@ -105,14 +105,28 @@ class Sandbox extends Phaser.Scene {
             else if (action_type === "pick_object") {
                 var closestBox = this.physics.closest(this.gripper, [this.boxA, this.boxB, this.boxC, this.boxD]);
                 var distanceFromGripper = Phaser.Math.Distance.Between(this.gripper.x, this.gripper.y, closestBox.x, closestBox.y);
+                var pickupDistance = 25; /* Reachable radius */
 
-                if (distanceFromGripper < 25) {
-                    console.log("One object is close to the gripper.");
-                    this.container.removeAll(); /* Clear container */
-                    closestBox.setPosition((this.gripper.height / 2) - (closestBox.height / 2), (this.gripper.width / 2) - (closestBox.width / 2));
-                    this.container.add(closestBox);
-                    this.children.bringToTop(this.gripper);
+                if (distanceFromGripper < pickupDistance) {
+                    if (this.container.list.length == 0) {
+                        closestBox.setPosition((this.gripper.height / 2) - (closestBox.height / 2), (this.gripper.width / 2) - (closestBox.width / 2));
+                        this.container.add(closestBox);
+                        this.children.bringToTop(this.gripper);    
+                    } else {
+                        console.log("Gripper is holding another box.")
+                    }
                 }
+
+                this.executeGripperAnimation();
+            }
+            else if (action_type === "release_object") {
+                this.container.each(function(box) {
+                    box.setPosition(this.gripper.x, this.gripper.y);
+                }, this);
+
+                this.container.removeAll(); /* Clear container */
+                this.children.bringToTop(this.gripper);
+                this.executeGripperAnimation();
             }
         } else {
             console.log('Finished gripper animation.');

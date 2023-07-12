@@ -180,6 +180,9 @@ function executeBlocklyCode() {
       if (block.type === "pick_object") {
         currentScene.appendAction(block.type, undefined);
       }
+      if (block.type === "release_object") {
+        currentScene.appendAction(block.type, undefined);
+      }
     }
 
     currentScene.executeGripperAnimation();
