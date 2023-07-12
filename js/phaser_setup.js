@@ -20,25 +20,23 @@ class Sandbox extends Phaser.Scene {
         var groundLayer = map.createLayer('ground', tileset);
         var markersLayer = map.createLayer('markers', tileset);
         
-        /* Gripper and boxes are considered sprites */
+        /* Boxes settings */
         this.boxA = this.physics.add.sprite(1600, 1600, 'boxes', 5);
         this.boxB = this.physics.add.sprite(800, 900, 'boxes', 6);
         this.boxC = this.physics.add.sprite(1300, 1850, 'boxes', 7);
         this.boxD = this.physics.add.sprite(700, 200, 'boxes', 8);
-        this.gripper = this.physics.add.sprite(384, 384, 'gripper');
-        
+
         /* Gripper settings */
+        this.gripper = this.physics.add.sprite(384, 384, 'gripper');
         this.gripper.setScale(1.5);
         this.gripper.setInteractive();
+        this.gripper.body.setSize(168, 168);
         this.gripper.setCollideWorldBounds(true);
         
-        /* Bounding sizes */
-        this.gripper.body.setSize(168, 168);
-        this.boxA.body.setSize(168, 168);
-        this.boxB.body.setSize(168, 168);
-        this.boxC.body.setSize(168, 168);
-        this.boxD.body.setSize(168, 168);
-        
+        /* Container settings (used to group gripper and nearest box) */
+        this.container = this.add.container(this.gripper.x, this.gripper.y);
+        this.container.setSize(this.gripper.width, this.gripper.height);
+
         /* Mouse mapping */
         this.input.mouse.disableContextMenu();
         
@@ -51,8 +49,6 @@ class Sandbox extends Phaser.Scene {
         }, this);
         
         /* Keyboard mapping */
-        var spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        var enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         var directionsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         var labelsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
 
@@ -72,6 +68,8 @@ class Sandbox extends Phaser.Scene {
     }
     
     update() {
+        this.container.setPosition(this.gripper.x, this.gripper.y)
+
         if (this.isMouseDown) {
             this.gripper.x = this.input.activePointer.worldX;
             this.gripper.y = this.input.activePointer.worldY;
@@ -103,7 +101,19 @@ class Sandbox extends Phaser.Scene {
                         this.executeGripperAnimation(); // Move to each saved position recursively
                     }
                 });
-            } 
+            }
+            else if (action_type === "pick_object") {
+                var closestBox = this.physics.closest(this.gripper, [this.boxA, this.boxB, this.boxC, this.boxD]);
+                var distanceFromGripper = Phaser.Math.Distance.Between(this.gripper.x, this.gripper.y, closestBox.x, closestBox.y);
+
+                if (distanceFromGripper < 25) {
+                    console.log("One object is close to the gripper.");
+                    this.container.removeAll(); /* Clear container */
+                    closestBox.setPosition((this.gripper.height / 2) - (closestBox.height / 2), (this.gripper.width / 2) - (closestBox.width / 2));
+                    this.container.add(closestBox);
+                    this.children.bringToTop(this.gripper);
+                }
+            }
         } else {
             console.log('Finished gripper animation.');
         }
@@ -178,7 +188,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            debug: true
         }
     },
     scale: {

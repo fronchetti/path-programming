@@ -177,6 +177,9 @@ function executeBlocklyCode() {
         var positionCoordinates = savedCoordinates.get(positionName);
         currentScene.appendAction(block.type, positionCoordinates);
       }
+      if (block.type === "pick_object") {
+        currentScene.appendAction(block.type, undefined);
+      }
     }
 
     currentScene.executeGripperAnimation();
