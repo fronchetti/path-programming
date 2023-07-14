@@ -163,37 +163,42 @@ const blocklyWorkspace = Blockly.inject(blocklyDiv, {
 var startingBlocks = document.getElementById("blocks");
 Blockly.Xml.domToWorkspace(startingBlocks, blocklyWorkspace);
 
-var rootBlock = Blockly.getMainWorkspace().getBlocksByType("custom_start")[0];
-blocklyWorkspace.centerOnBlock(rootBlock.id);
-rootBlock.setDeletable(false);
+var startingBlock = Blockly.getMainWorkspace().getBlocksByType("custom_start")[0];
+blocklyWorkspace.centerOnBlock(startingBlock.id);
+startingBlock.setDeletable(false);
 
 blocklyWorkspace.registerButtonCallback("run-program", executeBlocklyCode);
 blocklyWorkspace.registerButtonCallback("create-position", loadCreatePositionModal);
 blocklyWorkspace.registerButtonCallback("manage-positions", loadManagePositionsModal);
 
 function executeBlocklyCode() {
-  if (rootBlock) {
-    var attachedBlocks = rootBlock.getDescendants();
+  if (startingBlock) {
+    var attachedBlocks = startingBlock.getDescendants();
     var currentScene = game.scene.getScene("Sandbox");
+    currentScene.setAnimationBlocks(attachedBlocks);
+    currentScene.executeAnimation();
+  } else {
+    console.log("Blockly: No starting block available.")
+  }
+}
+
+function getBlocklyPositions() {
+  if (startingBlock) {
+    var attachedBlocks = startingBlock.getDescendants();
+    var movementBlocks = [];
 
     for (var i = 0; i < attachedBlocks.length; i++) {
-      var block = attachedBlocks[i];
+      var currentBlock = attachedBlocks[i];
 
-      if (block.type === "move_to_position") {
-        var positionName = block.getFieldValue("DROPDOWN_OPTIONS");
-        var positionCoordinates = savedCoordinates.get(positionName);
-        currentScene.appendAction(block.type, positionCoordinates, block.id);
-      }
-      else if (block.type === "pick_object") {
-        currentScene.appendAction(block.type, undefined, block.id);
-      }
-      else if (block.type === "release_object") {
-        currentScene.appendAction(block.type, undefined, block.id);
+      if (currentBlock.type === "move_to_position") {
+        var positionKey = currentBlock.getFieldValue("DROPDOWN_OPTIONS");
+        var coordinates = savedCoordinates.get(positionKey);
+        movementBlocks.push([positionKey, coordinates]);
       }
     }
 
-    currentScene.executeGripperAnimation();
+    return movementBlocks;
   } else {
-    console.log("No root block.")
-  }
+    console.log("Blockly: No starting block available.")
+  }  
 }

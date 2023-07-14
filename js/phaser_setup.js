@@ -2,7 +2,8 @@ class Sandbox extends Phaser.Scene {
     constructor() {
         super('Sandbox');
         this.isMouseDown = false;
-        this.savedActions = [];
+        this.animationBlocks = [];
+        this.savedPositions = []; /* Path visualization */
         this.positionLabels = [];
     }
     
@@ -54,7 +55,7 @@ class Sandbox extends Phaser.Scene {
 
         /* Display directions */
         directionsKey.on('down', function () {
-            this.drawDirections();
+            this.drawPath();
         }, this);
 
         /* Display position labels */
@@ -80,32 +81,31 @@ class Sandbox extends Phaser.Scene {
         return [this.gripper.x, this.gripper.y]
     }
 
-    appendAction(action_type, coordinates, block_id) {
-        this.savedActions.push([action_type, coordinates, block_id]);
+    setAnimationBlocks(blocks) {
+        this.savedAnimations = blocks; /* Used to perform animation */
     }
     
-    executeGripperAnimation() {
-        const nextAction = this.savedActions.shift();
+    executeAnimation() {
+        const nextBlock = this.savedAnimations.shift();
         
-        if (nextAction) {
-            var action_type = nextAction[0];
-            var coordinates = nextAction[1];
-            var block_id = nextAction[2];
-
-            blocklyWorkspace.highlightBlock(block_id);
+        if (nextBlock) {
+            blocklyWorkspace.highlightBlock(nextBlock.id);
             
-            if (action_type === "move_to_position") {
+            if (nextBlock.type === "move_to_position") {
+                var positionName = nextBlock.getFieldValue("DROPDOWN_OPTIONS");
+                var coordinates = savedCoordinates.get(positionName);
+
                 this.tweens.add({
                     targets: this.gripper,
                     x: coordinates[0],
                     y: coordinates[1],
                     duration: 1000,
                     onComplete: () => {
-                        this.executeGripperAnimation(); // Move to each saved position recursively
+                        this.executeAnimation(); // Move to each saved position recursively
                     }
                 });
             }
-            else if (action_type === "pick_object") {
+            else if (nextBlock.type === "pick_object") {
                 var closestBox = this.physics.closest(this.gripper, [this.boxA, this.boxB, this.boxC, this.boxD]);
                 var distanceFromGripper = Phaser.Math.Distance.Between(this.gripper.x, this.gripper.y, closestBox.x, closestBox.y);
                 var pickupDistance = 25; /* Reachable radius */
@@ -123,12 +123,12 @@ class Sandbox extends Phaser.Scene {
                 this.time.addEvent({
                     delay: 1000,
                     callback: ()=>{
-                        this.executeGripperAnimation();
+                        this.executeAnimation();
                     },
                     loop: false
                 })
             }
-            else if (action_type === "release_object") {
+            else if (nextBlock.type === "release_object") {
                 this.container.each(function(box) {
                     box.setPosition(this.gripper.x, this.gripper.y);
                 }, this);
@@ -139,27 +139,35 @@ class Sandbox extends Phaser.Scene {
                 this.time.addEvent({
                     delay: 1000,
                     callback: ()=>{
-                        this.executeGripperAnimation();
+                        this.executeAnimation();
                     },
                     loop: false
                 })
             }
+            else {
+                this.executeAnimation(); 
+            }
         } else {
-            console.log('Finished gripper animation.');
+            console.log('Phaser: Executed all block animations.');
         }
     }
     
     drawLabels() {
+        /* Get ordered positions of movement blocks
+           attached to starting block */
+        this.positionValues = getBlocklyPositions();
+
         /* Clear previous drawings */
         this.positionLabels.forEach(label => label.destroy());
         this.positionLabels = [];
         
-        for (let i = 0; i < this.savedActions.length; i++) {
+        for (let i = 0; i < this.positionValues.length; i++) {
             // Create and position the text object
-            const currentPosition = this.savedActions[i];
-            this.labelGraphics.fillStyle(0xff0000, 1); // Circle
-            this.labelGraphics.fillCircle(currentPosition.x, currentPosition.y, 50);
-            const text = this.add.text(currentPosition.x, currentPosition.y, String(i), { color: '#ffffff', fontSize: '80px', fontWeight: 'bold', fontFamily: 'Verdana' }).setOrigin(0.5);
+            var currentPositionName = this.positionValues[i][0];
+            var currentPosition = this.positionValues[i][1];
+            //this.labelGraphics.fillStyle(0xff0000, 1); // Circle
+            //this.labelGraphics.fillCircle(currentPosition[0], currentPosition[1], 20);
+            const text = this.add.text(currentPosition[0], currentPosition[1], String(currentPositionName), { color: '#000', fontSize: '60px', fontWeight: 'bold'}).setOrigin(0.5);
             this.positionLabels.push(text);
         }
     }
@@ -168,35 +176,39 @@ class Sandbox extends Phaser.Scene {
         this.positionLabels.forEach(label => label.destroy());
     }
     
-    drawDirections() {
+    drawPath() {
+        /* Get ordered positions of movement blocks
+        attached to starting block */
+        this.positionValues = getBlocklyPositions();
+
         /* Clear previous drawings */
         this.directionGraphics.clear();
         
-        for (let i = 0; i < this.savedActions.length - 1; i++) {
-            const currentPosition = this.savedActions[i];
-            const nextPosition = this.savedActions[i + 1];
+        for (let i = 0; i < this.positionValues.length - 1; i++) {
+            const currentPosition = this.positionValues[i][1];
+            const nextPosition = this.positionValues[i + 1][1];
             
-            const angle = Phaser.Math.Angle.Between(currentPosition.x, currentPosition.y, nextPosition.x, nextPosition.y);
+            const arrowStartX = currentPosition[0];
+            const arrowStartY = currentPosition[1];
+            
+            const arrowEndX = nextPosition[0];
+            const arrowEndY = nextPosition[1];
+
+            const angle = Phaser.Math.Angle.Between(arrowStartX, arrowStartY, arrowEndX, arrowEndY);
             
             const arrowHeadLength = 15;
             const arrowHeadWidth = 15;
             const lineThickness = 10;
-            
-            const arrowStartX = currentPosition.x;
-            const arrowStartY = currentPosition.y;
-            
-            const arrowEndX = nextPosition.x;
-            const arrowEndY = nextPosition.y;
-            
+                        
             const arrowHeadEndX = arrowEndX - Math.cos(angle) * arrowHeadLength;
             const arrowHeadEndY = arrowEndY - Math.sin(angle) * arrowHeadLength;
             
-            this.directionGraphics.lineStyle(lineThickness, 0xa84632);
+            this.directionGraphics.lineStyle(lineThickness, 0x262626);
             this.directionGraphics.moveTo(arrowStartX, arrowStartY);
             this.directionGraphics.lineTo(arrowEndX, arrowEndY);
             this.directionGraphics.strokePath();
             
-            this.directionGraphics.lineStyle(lineThickness, 0xa84632);
+            this.directionGraphics.lineStyle(lineThickness, 0x262626);
             this.directionGraphics.moveTo(arrowEndX, arrowEndY);
             this.directionGraphics.lineTo(arrowHeadEndX + Math.cos(angle + Math.PI / 2) * arrowHeadWidth, arrowHeadEndY + Math.sin(angle + Math.PI / 2) * arrowHeadWidth);
             this.directionGraphics.lineTo(arrowHeadEndX - Math.cos(angle + Math.PI / 2) * arrowHeadWidth, arrowHeadEndY - Math.sin(angle + Math.PI / 2) * arrowHeadWidth);
@@ -205,7 +217,7 @@ class Sandbox extends Phaser.Scene {
         }
     }
 
-    hideDirections() {
+    hidePath() {
         this.directionGraphics.clear();
     }
 }
