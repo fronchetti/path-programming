@@ -3,8 +3,10 @@ class Sandbox extends Phaser.Scene {
         super('Sandbox');
         this.isMouseDown = false;
         this.animationBlocks = [];
-        this.savedPositions = []; /* Path visualization */
-        this.positionLabels = [];
+
+        /* Used in path visualization */
+        this.pathLabels = [];
+        this.pathCircles = [];
     }
     
     preload() {
@@ -55,7 +57,7 @@ class Sandbox extends Phaser.Scene {
 
         /* Display directions */
         directionsKey.on('down', function () {
-            this.drawPath();
+            this.drawCircles();
         }, this);
 
         /* Display position labels */
@@ -72,8 +74,8 @@ class Sandbox extends Phaser.Scene {
         this.container.setPosition(this.gripper.x, this.gripper.y)
 
         if (this.isMouseDown) {
-            this.gripper.x = this.input.activePointer.worldX;
-            this.gripper.y = this.input.activePointer.worldY;
+            //this.gripper.x = this.input.activePointer.worldX;
+            //this.gripper.y = this.input.activePointer.worldY;
         }
     }
 
@@ -151,31 +153,52 @@ class Sandbox extends Phaser.Scene {
             console.log('Phaser: Executed all block animations.');
         }
     }
-    
-    drawLabels() {
-        /* Get ordered positions of movement blocks
-           attached to starting block */
-        this.positionValues = getBlocklyPositions();
+
+    drawCircles() {
+        /* Settings */
+        var circleRadius = 50;
+
+        /* Clear position labels */
+        this.pathLabels.forEach(label => label.destroy());
+        this.pathLabels = [];
 
         /* Clear previous drawings */
-        this.positionLabels.forEach(label => label.destroy());
-        this.positionLabels = [];
-        
+        this.directionGraphics.clear();
+
+        this.positionValues = getBlocklyPositions();
+
         for (let i = 0; i < this.positionValues.length; i++) {
-            // Create and position the text object
-            var currentPositionName = this.positionValues[i][0];
-            var currentPosition = this.positionValues[i][1];
-            //this.labelGraphics.fillStyle(0xff0000, 1); // Circle
-            //this.labelGraphics.fillCircle(currentPosition[0], currentPosition[1], 20);
-            const text = this.add.text(currentPosition[0], currentPosition[1], String(currentPositionName), { color: '#000', fontSize: '60px', fontWeight: 'bold'}).setOrigin(0.5);
-            this.positionLabels.push(text);
+            var positionName = this.positionValues[i][0];
+            const positionCoordinates = this.positionValues[i][1];
+
+            const positionX = positionCoordinates[0];
+            const positionY = positionCoordinates[1];
+
+            /* Interactable Circle */
+            const positionCircle = this.add.circle(positionX, positionY, circleRadius, 0x000000);
+            positionCircle.setInteractive();
+            this.input.setDraggable(positionCircle);
+            this.pathCircles.push(positionCircle)
+
+            positionCircle.on('drag', function (p, x, y) {
+                positionCircle.setFillStyle(0xe87041);
+                positionCircle.x = x;
+                positionCircle.y = y;
+                this.positionValues[i][1][0] = x;
+                this.positionValues[i][1][1] = y;
+            }, this);
+
+            positionCircle.on('dragend', function() {
+                this.pathCircles.forEach(circle => circle.destroy());
+                this.drawCircles();
+            }, this);
+
+            /* Position label */
+            const text = this.add.text(positionX, positionY - 70, String(positionName), { fontFamily: 'Arial', color: '#000', fontSize: '32px', fontWeight: 'bold'}).setOrigin(0.5);
+            this.pathLabels.push(text);
         }
     }
 
-    hideLabels() {
-        this.positionLabels.forEach(label => label.destroy());
-    }
-    
     drawPath() {
         /* Get ordered positions of movement blocks
         attached to starting block */
@@ -185,36 +208,50 @@ class Sandbox extends Phaser.Scene {
         this.directionGraphics.clear();
         
         for (let i = 0; i < this.positionValues.length - 1; i++) {
+            var currentPositionName = this.positionValues[i][0];
             const currentPosition = this.positionValues[i][1];
             const nextPosition = this.positionValues[i + 1][1];
             
-            const arrowStartX = currentPosition[0];
-            const arrowStartY = currentPosition[1];
-            
-            const arrowEndX = nextPosition[0];
-            const arrowEndY = nextPosition[1];
+            const startPointX = currentPosition[0];
+            const startPointY = currentPosition[1];
+            const endPointX = nextPosition[0];
+            const endPointY = nextPosition[1];
 
-            const angle = Phaser.Math.Angle.Between(arrowStartX, arrowStartY, arrowEndX, arrowEndY);
-            
-            const arrowHeadLength = 15;
-            const arrowHeadWidth = 15;
-            const lineThickness = 10;
-                        
-            const arrowHeadEndX = arrowEndX - Math.cos(angle) * arrowHeadLength;
-            const arrowHeadEndY = arrowEndY - Math.sin(angle) * arrowHeadLength;
-            
-            this.directionGraphics.lineStyle(lineThickness, 0x262626);
-            this.directionGraphics.moveTo(arrowStartX, arrowStartY);
-            this.directionGraphics.lineTo(arrowEndX, arrowEndY);
+            var angle = Phaser.Math.Angle.Between(startPointX, startPointY, endPointX, endPointY);
+
+            const lineThickness = 5;
+    
+            /* Lines */
+            this.directionGraphics.lineStyle(lineThickness, 0x121212, 0.85);
+            this.directionGraphics.beginPath()
+            this.directionGraphics.moveTo(startPointX, startPointY);
+            this.directionGraphics.lineTo(endPointX, endPointY);
             this.directionGraphics.strokePath();
-            
-            this.directionGraphics.lineStyle(lineThickness, 0x262626);
-            this.directionGraphics.moveTo(arrowEndX, arrowEndY);
-            this.directionGraphics.lineTo(arrowHeadEndX + Math.cos(angle + Math.PI / 2) * arrowHeadWidth, arrowHeadEndY + Math.sin(angle + Math.PI / 2) * arrowHeadWidth);
-            this.directionGraphics.lineTo(arrowHeadEndX - Math.cos(angle + Math.PI / 2) * arrowHeadWidth, arrowHeadEndY - Math.sin(angle + Math.PI / 2) * arrowHeadWidth);
             this.directionGraphics.closePath();
-            this.directionGraphics.strokePath();
+
+            //this.pathCircles.push(positionCircle);
+
+            //this.directionGraphics.fillStyle(0xf5f5f5, 1); 
+            //this.directionGraphics.fillCircle(startPointX, startPointY, circleRadius);
+
+            if (i == this.positionValues.length - 2) {
+                var currentPositionName = this.positionValues[i + 1][0];
+                const currentPosition = this.positionValues[i + 1][1];
+
+                const startPointX = currentPosition[0];
+                const startPointY = currentPosition[1];
+
+                /* Circle */
+                this.directionGraphics.fillStyle(0xf5f5f5, 1); 
+                this.directionGraphics.fillCircle(startPointX, startPointY, circleRadius);
+
+                /* Label */
+                const text = this.add.text(startPointX, startPointY, String(currentPositionName), { fontFamily: 'Arial', color: '#000', fontSize: '32px', fontWeight: 'bold'}).setOrigin(0.5);
+                this.pathLabels.push(text);
+            }
         }
+
+        this.children.bringToTop(this.gripper);
     }
 
     hidePath() {

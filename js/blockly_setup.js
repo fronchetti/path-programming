@@ -59,7 +59,7 @@ Blockly.defineBlocksWithJsonArray([
   },
   {
     "type": "move_to_position",
-    "message0": "Move gripper to %1",
+    "message0": "Move robot to %1",
     "args0": [
       {
         "type": "input_dummy",
@@ -120,7 +120,7 @@ const toolbox = {
     },
     {
       "kind": "button",
-      "text": "Edit Positions",
+      "text": "Manage  Positions",
       "callbackKey": "manage-positions",
     },
     {
