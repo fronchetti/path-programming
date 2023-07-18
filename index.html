@@ -12,7 +12,7 @@
         <script src="blockly/javascript_compressed.js"></script>
         <script src="blockly/msg/en.js"></script>
         <!-- Phaser -->
-        <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+        <script src="phaser/phaser.min.js"></script>
     </head>
     <body>
         <div class="container-fluid">
@@ -22,10 +22,22 @@
           </div>
 
           <div class="row">
-                <div class="language col-8">
+                <div class="language col-md-8 col-sm-12">
                     <div id="blockly-workspace" class="blockly-workspace"></div>
                 </div>
-                <div class="simulation col-4">
+                <div class="simulation col-md-4 col-sm-12">
+                  <div class="row show-options">
+                    <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                      <input type="checkbox" class="btn-check" id="show-positions" autocomplete="off">
+                      <label class="btn btn-outline-dark" for="show-positions"><b>Show Positions</b></label>
+                    
+                      <input type="checkbox" class="btn-check" id="show-directions" autocomplete="off">
+                      <label class="btn btn-outline-dark" for="show-directions"><b>Show Directions</b></label>
+                    
+                      <input type="checkbox" class="btn-check" id="show-names" autocomplete="off">
+                      <label class="btn btn-outline-dark" for="show-names"><b>Show Names</b></label>
+                    </div>
+                  </div>
                   <div class="display">
                     <div id="game-canvas" class="game-canvas"></div>
                   </div>
@@ -45,11 +57,14 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Edit Positions</h5>
+                  <h5 class="modal-title">Remove Position</h5>
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <div class="row">
+                      <div class="row">
+                        <p>Select the position you want to remove:</p>
+                      </div>
+                      <div class="row">
                             <div id="positions-list" class="list-group">
                                 <!-- Filled dynamically in bootstrap_setup.js -->
                             </div>

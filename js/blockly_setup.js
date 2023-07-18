@@ -120,7 +120,7 @@ const toolbox = {
     },
     {
       "kind": "button",
-      "text": "Manage  Positions",
+      "text": "Remove Position",
       "callbackKey": "manage-positions",
     },
     {
@@ -160,8 +160,8 @@ const blocklyWorkspace = Blockly.inject(blocklyDiv, {
             wheel: false},
           trashcan: true});
 
-Blockly.HSV_SATURATION = 0.6;
-Blockly.HSV_VALUE = 0.75;
+Blockly.HSV_SATURATION = 0.55;
+Blockly.HSV_VALUE = 0.55;
 var startingBlocks = document.getElementById("blocks");
 Blockly.Xml.domToWorkspace(startingBlocks, blocklyWorkspace);
 

@@ -5,8 +5,13 @@ class Sandbox extends Phaser.Scene {
         this.animationBlocks = [];
 
         /* Used in path visualization */
-        this.pathLabels = [];
-        this.pathCircles = [];
+        this.isPositioning = false;
+        this.showCircles = false;
+        this.showArrows = false;
+        this.showLabels = false;
+        this.circleRadius = 40;
+        this.positionLabels = [];
+        this.positionCircles = [];
     }
     
     preload() {
@@ -53,21 +58,16 @@ class Sandbox extends Phaser.Scene {
         
         /* Keyboard mapping */
         var directionsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        var labelsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
 
         /* Display directions */
         directionsKey.on('down', function () {
             this.drawCircles();
-        }, this);
-
-        /* Display position labels */
-        labelsKey.on('down', function () {
+            this.drawArrows();
             this.drawLabels();
         }, this);
         
         /* Arrow drawing */
         this.directionGraphics = this.add.graphics();
-        this.labelGraphics = this.add.graphics();
     }
     
     update() {
@@ -155,17 +155,56 @@ class Sandbox extends Phaser.Scene {
     }
 
     drawCircles() {
-        /* Settings */
-        var circleRadius = 50;
-
-        /* Clear position labels */
-        this.pathLabels.forEach(label => label.destroy());
-        this.pathLabels = [];
+        /* Get ordered positions of movement blocks
+        attached to starting block */
+        this.positionValues = getBlocklyPositions();
 
         /* Clear previous drawings */
-        this.directionGraphics.clear();
+        this.positionCircles.forEach(circle => circle.destroy());
 
+        for (let i = 0; i < this.positionValues.length; i++) {
+            const positionCoordinates = this.positionValues[i][1];
+
+            const positionX = positionCoordinates[0];
+            const positionY = positionCoordinates[1];
+
+            const positionCircle = this.add.circle(positionX, positionY, this.circleRadius, 0x000000);
+            positionCircle.setInteractive();
+            this.input.setDraggable(positionCircle);
+            this.positionCircles.push(positionCircle)
+
+            positionCircle.on('drag', function (p, x, y) {
+                this.children.bringToTop(positionCircle);
+                positionCircle.setFillStyle(0xff9c2b);
+                positionCircle.x = x;
+                positionCircle.y = y;
+                this.positionLabels[i].x = x;
+                this.positionLabels[i].y = y - (this.circleRadius * 1.75);
+                this.positionValues[i][1][0] = x;
+                this.positionValues[i][1][1] = y;
+                this.drawArrows();
+                this.drawLabels();
+            }, this);
+
+            positionCircle.on('dragend', function() {
+                this.drawArrows();
+                this.drawLabels();
+                this.drawCircles();
+            }, this);
+        }
+    }
+
+    hideCircles() {
+        this.positionCircles.forEach(circle => circle.destroy());
+    }
+
+    drawLabels() {
+        /* Get ordered positions of movement blocks
+        attached to starting block */
         this.positionValues = getBlocklyPositions();
+
+        /* Clear previous drawings */
+        this.positionLabels.forEach(label => label.destroy());
 
         for (let i = 0; i < this.positionValues.length; i++) {
             var positionName = this.positionValues[i][0];
@@ -173,33 +212,18 @@ class Sandbox extends Phaser.Scene {
 
             const positionX = positionCoordinates[0];
             const positionY = positionCoordinates[1];
-
-            /* Interactable Circle */
-            const positionCircle = this.add.circle(positionX, positionY, circleRadius, 0x000000);
-            positionCircle.setInteractive();
-            this.input.setDraggable(positionCircle);
-            this.pathCircles.push(positionCircle)
-
-            positionCircle.on('drag', function (p, x, y) {
-                positionCircle.setFillStyle(0xe87041);
-                positionCircle.x = x;
-                positionCircle.y = y;
-                this.positionValues[i][1][0] = x;
-                this.positionValues[i][1][1] = y;
-            }, this);
-
-            positionCircle.on('dragend', function() {
-                this.pathCircles.forEach(circle => circle.destroy());
-                this.drawCircles();
-            }, this);
-
-            /* Position label */
-            const text = this.add.text(positionX, positionY - 75, String(positionName), { fontFamily: 'Arial', color: '#000', fontSize: '48px', fontWeight: 'bold'}).setOrigin(0.5);
-            this.pathLabels.push(text);
+            
+            const labelText = this.add.text(positionX, positionY - (this.circleRadius * 1.75), String(positionName), { fontFamily: 'Arial', color: '#000', fontSize: '48px', fontWeight: 'bold'}).setOrigin(0.5);
+            this.children.bringToTop(labelText);
+            this.positionLabels.push(labelText);
         }
     }
 
-    drawPath() {
+    hideLabels() {
+        this.positionLabels.forEach(label => label.destroy());
+    }
+
+    drawArrows() {
         /* Get ordered positions of movement blocks
         attached to starting block */
         this.positionValues = getBlocklyPositions();
@@ -208,50 +232,36 @@ class Sandbox extends Phaser.Scene {
         this.directionGraphics.clear();
         
         for (let i = 0; i < this.positionValues.length - 1; i++) {
-            var currentPositionName = this.positionValues[i][0];
             const currentPosition = this.positionValues[i][1];
             const nextPosition = this.positionValues[i + 1][1];
-            
-            const startPointX = currentPosition[0];
-            const startPointY = currentPosition[1];
-            const endPointX = nextPosition[0];
-            const endPointY = nextPosition[1];
 
-            var angle = Phaser.Math.Angle.Between(startPointX, startPointY, endPointX, endPointY);
+            var angle = Phaser.Math.Angle.Between(currentPosition[0], currentPosition[1], nextPosition[0], nextPosition[1]);
 
-            const lineThickness = 5;
+            var startPointX = currentPosition[0] + (this.circleRadius + 10) * Math.cos(angle);
+            var startPointY = currentPosition[1] + (this.circleRadius + 10)  * Math.sin(angle);
+            var endPointX = nextPosition[0] - (this.circleRadius + 10) * Math.cos(angle);
+            var endPointY = nextPosition[1] - (this.circleRadius + 10) * Math.sin(angle);
+
+            var lineThickness = 5;
     
-            /* Lines */
-            this.directionGraphics.lineStyle(lineThickness, 0x121212, 0.85);
+            /* Line */
+            this.directionGraphics.lineStyle(lineThickness, 0x121212, 0.25);
             this.directionGraphics.beginPath()
             this.directionGraphics.moveTo(startPointX, startPointY);
             this.directionGraphics.lineTo(endPointX, endPointY);
             this.directionGraphics.strokePath();
+
+            /* Arrow */
+            var arrowSize = 50;
+            var endPointX = nextPosition[0] - (this.circleRadius + 5) * Math.cos(angle);
+            var endPointY = nextPosition[1] - (this.circleRadius + 5) * Math.sin(angle);
+            var pointA = new Phaser.Geom.Point(endPointX, endPointY);
+            var pointB = new Phaser.Geom.Point(endPointX + arrowSize * Math.cos(angle + Phaser.Math.DegToRad(150)), endPointY + arrowSize * Math.sin(angle + Phaser.Math.DegToRad(150)));
+            var pointC = new Phaser.Geom.Point(endPointX + arrowSize * Math.cos(angle + Phaser.Math.DegToRad(210)), endPointY + arrowSize * Math.sin(angle + Phaser.Math.DegToRad(210)));
+            this.directionGraphics.fillStyle(0x121212, 1);
+            this.directionGraphics.fillTriangle(pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y);
             this.directionGraphics.closePath();
-
-            //this.pathCircles.push(positionCircle);
-
-            //this.directionGraphics.fillStyle(0xf5f5f5, 1); 
-            //this.directionGraphics.fillCircle(startPointX, startPointY, circleRadius);
-
-            if (i == this.positionValues.length - 2) {
-                var currentPositionName = this.positionValues[i + 1][0];
-                const currentPosition = this.positionValues[i + 1][1];
-
-                const startPointX = currentPosition[0];
-                const startPointY = currentPosition[1];
-
-                /* Circle */
-                this.directionGraphics.fillStyle(0xf5f5f5, 1); 
-                this.directionGraphics.fillCircle(startPointX, startPointY, circleRadius);
-
-                /* Label */
-                const text = this.add.text(startPointX, startPointY, String(currentPositionName), { fontFamily: 'Arial', color: '#000', fontSize: '32px', fontWeight: 'bold'}).setOrigin(0.5);
-                this.pathLabels.push(text);
-            }
         }
-
-        this.children.bringToTop(this.gripper);
     }
 
     hidePath() {

@@ -7,7 +7,6 @@ savedVariables.set("Test", "TEST");
 savedVariables.set("Test2", "TEST2");
 savedVariables.set("Test3", "TEST3");
 
-
 /* savedCoordinates saves the positions coordinates from the Phaser environment.
 In the example below, "HOME_POSITION" is the language-neutral key from Blockly, 
 and [0, 0] the coordinates in Phaser. */

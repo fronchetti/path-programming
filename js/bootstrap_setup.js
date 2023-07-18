@@ -16,10 +16,9 @@ function loadManagePositionsModal() {
     for (let [name, key] of savedVariables) {
         htmlContent += '<a id="position-value" class="list-group-item">\
                 <div class="row">\
-                    <div id="position-name" class="col-6">' + name + '</div>\
-                    <div id="position-options" class="col-6">\
-                        <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen"></i> Rename</button>\
-                        <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-crosshairs"></i> Reposition</button>\
+                    <div id="position-name" class="col-8">' + name + '</div>\
+                    <div id="position-options" class="col-4">\
+                        <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i>Remove</button>\
                     </div>\
                 </div>\
               </a>'
