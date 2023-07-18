@@ -74,8 +74,8 @@ class Sandbox extends Phaser.Scene {
         this.container.setPosition(this.gripper.x, this.gripper.y)
 
         if (this.isMouseDown) {
-            //this.gripper.x = this.input.activePointer.worldX;
-            //this.gripper.y = this.input.activePointer.worldY;
+            this.gripper.x = this.input.activePointer.worldX;
+            this.gripper.y = this.input.activePointer.worldY;
         }
     }
 
@@ -194,7 +194,7 @@ class Sandbox extends Phaser.Scene {
             }, this);
 
             /* Position label */
-            const text = this.add.text(positionX, positionY - 70, String(positionName), { fontFamily: 'Arial', color: '#000', fontSize: '32px', fontWeight: 'bold'}).setOrigin(0.5);
+            const text = this.add.text(positionX, positionY - 75, String(positionName), { fontFamily: 'Arial', color: '#000', fontSize: '48px', fontWeight: 'bold'}).setOrigin(0.5);
             this.pathLabels.push(text);
         }
     }

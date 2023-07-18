@@ -53,7 +53,7 @@ Blockly.defineBlocksWithJsonArray([
     "type": "custom_start",
     "message0": "When program is started:",
     "nextStatement": null,
-    "colour": 220,
+    "colour": 210,
     "tooltip": "",
     "helpUrl": ""
   },
@@ -82,7 +82,7 @@ Blockly.defineBlocksWithJsonArray([
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": 50,
+    "colour": 40,
     "tooltip": "",
     "helpUrl": "",
     "extensions": []
@@ -94,7 +94,7 @@ Blockly.defineBlocksWithJsonArray([
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": 100,
+    "colour": 90,
     "tooltip": "",
     "helpUrl": "",
     "extensions": []
@@ -160,6 +160,8 @@ const blocklyWorkspace = Blockly.inject(blocklyDiv, {
             wheel: false},
           trashcan: true});
 
+Blockly.HSV_SATURATION = 0.6;
+Blockly.HSV_VALUE = 0.75;
 var startingBlocks = document.getElementById("blocks");
 Blockly.Xml.domToWorkspace(startingBlocks, blocklyWorkspace);
 
