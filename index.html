@@ -49,26 +49,19 @@
           <block type="custom_start" id="START" x="-250" y="-150"></block>
         </xml>
 
-        <!-- Modal - Edit positions -->
-        <div class="modal fade" id="list-positions-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <!-- Modal - Delete positions -->
+        <div class="modal fade" id="delete-positions-modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Delete Positions</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container">
-                      <div class="row">
-                        <p>Use the remove buttons to delete positions:</p>
-                      </div>
-                      <div class="row">
-                            <div id="delete-positions-list" class="list-group">
-                                <!-- Filled dynamically in bootstrap_setup.js -->
-                            </div>
-                        </div>
+                  <div class="col-12">
+                    <div id="delete-positions-container" class="container">
                     </div>
-                </div>
-                <div class="modal-footer">
+                  </div>
                 </div>
               </div>
             </div>
@@ -80,6 +73,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Create Position</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form class="row g-3">
@@ -87,16 +81,14 @@
                           <label for="position-name" class="form-label">Give the position a name:</label>
                           <input type="text" class="form-control" id="position-name" placeholder="Name" required>
                         </div>
-                        <div class="col-12">
-                            <div class="container">
-                                <div class="row">
-                                    <button type="button" id="create-position-button" class="btn btn-primary btn-lg">Create</button>
-                                </div>    
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
+                  <div class="container">
+                    <div class="row">
+                      <button type="button" id="create-position-button" class="btn btn-success btn-lg">Create</button>
+                    </div>    
+                  </div>
                 </div>
               </div>
             </div>

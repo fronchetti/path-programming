@@ -51,7 +51,7 @@ Blockly.defineBlocksWithJsonArray([
   /* Custom movement block */
   {
     "type": "custom_start",
-    "message0": "When program is started:",
+    "message0": "When program starts:",
     "nextStatement": null,
     "colour": 210,
     "tooltip": "",
@@ -160,15 +160,21 @@ const blocklyWorkspace = Blockly.inject(blocklyDiv, {
             wheel: false},
           trashcan: true});
 
+/* Listen to changes on workspace */
+blocklyWorkspace.addChangeListener(onBlockChange);
+
+/* Define block colors */
 Blockly.HSV_SATURATION = 0.55;
 Blockly.HSV_VALUE = 0.55;
+
+/* Define starting block (root) */
 var startingBlocks = document.getElementById("blocks");
 Blockly.Xml.domToWorkspace(startingBlocks, blocklyWorkspace);
-
 var startingBlock = Blockly.getMainWorkspace().getBlocksByType("custom_start")[0];
 blocklyWorkspace.centerOnBlock(startingBlock.id);
 startingBlock.setDeletable(false);
 
+/* Define workspace buttons callbacks */
 blocklyWorkspace.registerButtonCallback("run-program", executeBlocklyCode);
 blocklyWorkspace.registerButtonCallback("create-position", loadCreatePositionModal);
 blocklyWorkspace.registerButtonCallback("delete-positions", loadPositionsForRemoval);
@@ -217,6 +223,7 @@ function removeBlocksWithPosition(removedKey) {
         var positionKey = currentBlock.getFieldValue("DROPDOWN_OPTIONS");
         if (positionKey === removedKey) {
           currentBlock.unplug(true);
+
           currentBlock.dispose();
         }
       }
@@ -226,4 +233,21 @@ function removeBlocksWithPosition(removedKey) {
   } else {
     console.log("Blockly: No starting block available.")
   }  
+}
+
+function onBlockChange(event) {
+  if (event.type == Blockly.Events.BLOCK_MOVE || event.type == Blockly.Events.BLOCK_CHANGE) {
+    var currentScene = game.scene.getScene(phaserSceneName);
+
+    if (currentScene) {
+      if (currentScene.showCircles) {
+        currentScene.drawCircles();
+        currentScene.drawLabels();
+      }
+  
+      if (currentScene.showArrows) {
+          currentScene.drawArrows();
+      }  
+    }
+  }
 }

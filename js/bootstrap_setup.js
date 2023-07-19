@@ -1,4 +1,4 @@
-const managePositionsModal = new bootstrap.Modal(document.getElementById("list-positions-modal"));
+const managePositionsModal = new bootstrap.Modal(document.getElementById("delete-positions-modal"));
 const createPositionModal = new bootstrap.Modal(document.getElementById("create-position-modal"));
 
 var createPositionButton = document.getElementById("create-position-button");
@@ -16,33 +16,42 @@ function loadCreatePositionModal() {
 
 function loadPositionsForRemoval() {
     managePositionsModal.show();
-    var positionsElement = document.getElementById("delete-positions-list");
+    var positionsContainer = document.getElementById("delete-positions-container")
     var htmlContent = "";
   
-    console.log(savedVariables);
     if (savedVariables.size > 1) {
+        htmlContent += '<div class="row"><p>Use the buttons below to delete the assigned positions:</p></div>';
+        htmlContent += '<div class="row">';
+        htmlContent += '<div id="delete-positions-list" class="list-group">';
+
         for (let [name, key] of savedVariables) {
             if (name != "Home") {
                 htmlContent += '<a id="delete-position-value" class="list-group-item">\
                 <div class="row">\
                     <div id="delete-position-name" class="col-6">' + name + '</div>\
                     <div id="delete-position-options" class="col-6">\
-                        <button type="button" id="delete-position-button" value="' + name + '" class="btn btn-danger float-end">Remove</button>\
+                        <div class="container">\
+                            <div class="row">\
+                                <button type="button" id="delete-position-button" value="' + name + '" class="btn btn-danger float-end">Delete</button>\
+                            </div>\
+                        </div>\
                     </div>\
                 </div>\
               </a>'
             }
         }
-    
-        positionsElement.innerHTML = htmlContent;
+
+        htmlContent += '</div></div>';
+        positionsContainer.innerHTML = htmlContent;
+
         var removeButtons = document.querySelectorAll("#delete-position-button");
     
         removeButtons.forEach(removeButton => {
-            removeButton.addEventListener("click", removePosition, false);
+            removeButton.addEventListener("click", deletePosition, false);
         });    
     } else {
-        var positionsElement = document.getElementById("delete-positions-list");
-        positionsElement.innerHTML = '<div class="col-12"><p>No positions available.</p></div>'
+        htmlContent = '<div class="row"><p>No robot positions were assigned.</p></div>';
+        positionsContainer.innerHTML = htmlContent;
     }
 }
 
@@ -59,18 +68,30 @@ function requestNewPosition() {
     }
 }
 
-function removePosition(event) {
+function deletePosition(event) {
     var positionName = event.currentTarget.value;
     var positionKey = savedVariables.get(positionName);
     savedVariables.delete(positionName);
     savedCoordinates.delete(positionKey);
     removeBlocksWithPosition(positionKey);
+
+    var currentScene = game.scene.getScene(phaserSceneName);
+
+    if (currentScene.showCircles) {
+        currentScene.drawCircles();
+        currentScene.drawLabels();
+    }
+
+    if (currentScene.showArrows) {
+        currentScene.drawArrows();
+    }
+
     loadPositionsForRemoval();
 }
 
 function toggleShowPositions() {
     var currentScene = game.scene.getScene(phaserSceneName);
-    if (currentScene.showCircles === true) {
+    if (currentScene.showCircles) {
         currentScene.showCircles = false;
         currentScene.hideCircles();
         currentScene.hideLabels()
@@ -83,7 +104,7 @@ function toggleShowPositions() {
 
 function toggleShowDirections() {
     var currentScene = game.scene.getScene(phaserSceneName);
-    if (currentScene.showArrows === true) {
+    if (currentScene.showArrows) {
         currentScene.showArrows = false;
         currentScene.hideArrows();
     } else {
