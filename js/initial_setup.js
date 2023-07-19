@@ -1,3 +1,5 @@
+const phaserSceneName = "Sandbox"
+
 /* savedVariables saves the position names created by the user.
 In the example below, "Home" is the variable name, and "HOME_POSITION"
 the language-neutral key that identifies this variable in Blockly. */

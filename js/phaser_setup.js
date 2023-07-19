@@ -1,6 +1,6 @@
-class Sandbox extends Phaser.Scene {
+class RobotScene extends Phaser.Scene {
     constructor() {
-        super('Sandbox');
+        super(phaserSceneName);
         this.isMouseDown = false;
         this.animationBlocks = [];
 
@@ -8,7 +8,6 @@ class Sandbox extends Phaser.Scene {
         this.isPositioning = false;
         this.showCircles = false;
         this.showArrows = false;
-        this.showLabels = false;
         this.circleRadius = 40;
         this.positionLabels = [];
         this.positionCircles = [];
@@ -56,24 +55,14 @@ class Sandbox extends Phaser.Scene {
             this.isMouseDown = false;
         }, this);
         
-        /* Keyboard mapping */
-        var directionsKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-        /* Display directions */
-        directionsKey.on('down', function () {
-            this.drawCircles();
-            this.drawArrows();
-            this.drawLabels();
-        }, this);
-        
-        /* Arrow drawing */
+        /* Arrows drawing */
         this.directionGraphics = this.add.graphics();
     }
     
     update() {
         this.container.setPosition(this.gripper.x, this.gripper.y)
 
-        if (this.isMouseDown) {
+        if (this.isMouseDown && !this.isPositioning) {
             this.gripper.x = this.input.activePointer.worldX;
             this.gripper.y = this.input.activePointer.worldY;
         }
@@ -174,20 +163,35 @@ class Sandbox extends Phaser.Scene {
             this.positionCircles.push(positionCircle)
 
             positionCircle.on('drag', function (p, x, y) {
-                this.children.bringToTop(positionCircle);
-                positionCircle.setFillStyle(0xff9c2b);
+                this.isPositioning = true;
+
+                /* Updating elements position and values */
                 positionCircle.x = x;
                 positionCircle.y = y;
                 this.positionLabels[i].x = x;
                 this.positionLabels[i].y = y - (this.circleRadius * 1.75);
+                this.gripper.x = positionCircle.x;
+                this.gripper.y = positionCircle.y;
                 this.positionValues[i][1][0] = x;
                 this.positionValues[i][1][1] = y;
-                this.drawArrows();
+
+                this.children.bringToTop(positionCircle);
+                positionCircle.setFillStyle(0xff9c2b);
+
+                if (this.showArrows) {
+                    this.drawArrows();
+                }
+
                 this.drawLabels();
             }, this);
 
             positionCircle.on('dragend', function() {
-                this.drawArrows();
+                this.isPositioning = false;
+
+                if (this.showArrows) {
+                    this.drawArrows();
+                }
+
                 this.drawLabels();
                 this.drawCircles();
             }, this);
@@ -212,10 +216,11 @@ class Sandbox extends Phaser.Scene {
 
             const positionX = positionCoordinates[0];
             const positionY = positionCoordinates[1];
-            
-            const labelText = this.add.text(positionX, positionY - (this.circleRadius * 1.75), String(positionName), { fontFamily: 'Arial', color: '#000', fontSize: '48px', fontWeight: 'bold'}).setOrigin(0.5);
-            this.children.bringToTop(labelText);
-            this.positionLabels.push(labelText);
+
+            const positionLabel = this.add.text(positionX, positionY - (this.circleRadius * 1.75), String(positionName), 
+                              { fontFamily: 'Arial', color: '#000', fontSize: '48px', fontWeight: 'bold'}).setOrigin(0.5);
+            this.children.bringToTop(positionLabel);
+            this.positionLabels.push(positionLabel);
         }
     }
 
@@ -264,7 +269,7 @@ class Sandbox extends Phaser.Scene {
         }
     }
 
-    hidePath() {
+    hideArrows() {
         this.directionGraphics.clear();
     }
 }
@@ -273,7 +278,7 @@ var config = {
     width: 2048,
     height: 2048,
     parent: 'game-canvas',
-    scene: [Sandbox],
+    scene: [RobotScene],
     physics: {
         default: 'arcade',
         arcade: {

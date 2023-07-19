@@ -120,8 +120,8 @@ const toolbox = {
     },
     {
       "kind": "button",
-      "text": "Remove Position",
-      "callbackKey": "manage-positions",
+      "text": "Delete Positions",
+      "callbackKey": "delete-positions",
     },
     {
       "kind": "label",
@@ -171,12 +171,12 @@ startingBlock.setDeletable(false);
 
 blocklyWorkspace.registerButtonCallback("run-program", executeBlocklyCode);
 blocklyWorkspace.registerButtonCallback("create-position", loadCreatePositionModal);
-blocklyWorkspace.registerButtonCallback("manage-positions", loadManagePositionsModal);
+blocklyWorkspace.registerButtonCallback("delete-positions", loadPositionsForRemoval);
 
 function executeBlocklyCode() {
   if (startingBlock) {
     var attachedBlocks = startingBlock.getDescendants();
-    var currentScene = game.scene.getScene("Sandbox");
+    var currentScene = game.scene.getScene(phaserSceneName);
     currentScene.setAnimationBlocks(attachedBlocks);
     currentScene.executeAnimation();
   } else {
@@ -196,6 +196,29 @@ function getBlocklyPositions() {
         var positionKey = currentBlock.getFieldValue("DROPDOWN_OPTIONS");
         var coordinates = savedCoordinates.get(positionKey);
         movementBlocks.push([positionKey, coordinates]);
+      }
+    }
+
+    return movementBlocks;
+  } else {
+    console.log("Blockly: No starting block available.")
+  }  
+}
+
+function removeBlocksWithPosition(removedKey) {
+  if (startingBlock) {
+    var attachedBlocks = startingBlock.getDescendants();
+    var movementBlocks = [];
+
+    for (var i = 0; i < attachedBlocks.length; i++) {
+      var currentBlock = attachedBlocks[i];
+
+      if (currentBlock.type === "move_to_position") {
+        var positionKey = currentBlock.getFieldValue("DROPDOWN_OPTIONS");
+        if (positionKey === removedKey) {
+          currentBlock.unplug(true);
+          currentBlock.dispose();
+        }
       }
     }
 
