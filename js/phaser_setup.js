@@ -8,7 +8,7 @@ class RobotScene extends Phaser.Scene {
         this.isPositioning = false;
         this.showCircles = false;
         this.showArrows = false;
-        this.circleRadius = 40;
+        this.circleRadius = 64;
         this.positionLabels = [];
         this.positionCircles = [];
     }
@@ -139,138 +139,147 @@ class RobotScene extends Phaser.Scene {
                 this.executeAnimation(); 
             }
         } else {
+            this.drawCircles();
+            this.drawLabels();
+            this.drawArrows();    
             console.log('Phaser: Executed all block animations.');
         }
     }
 
     drawCircles() {
-        /* Get ordered positions of movement blocks
-        attached to starting block */
-        this.positionValues = getBlocklyPositions();
+        if (this.showCircles) {
+            /* Get ordered positions of movement blocks
+            attached to starting block */
+            this.positionValues = getBlocklyPositions();
 
-        /* Clear previous drawings */
-        this.positionCircles.forEach(circle => circle.destroy());
+            /* Clear previous drawings */
+            this.positionCircles.forEach(circle => circle.destroy());
 
-        for (let i = 0; i < this.positionValues.length; i++) {
-            const positionCoordinates = this.positionValues[i][1];
+            for (let i = 0; i < this.positionValues.length; i++) {
+                const positionCoordinates = this.positionValues[i][1];
 
-            const positionX = positionCoordinates[0];
-            const positionY = positionCoordinates[1];
+                const positionX = positionCoordinates[0];
+                const positionY = positionCoordinates[1];
 
-            const positionCircle = this.add.circle(positionX, positionY, this.circleRadius, 0x000000);
-            positionCircle.setInteractive();
-            this.input.setDraggable(positionCircle);
-            this.positionCircles.push(positionCircle)
+                const positionCircle = this.add.circle(positionX, positionY, this.circleRadius, 0x000);
+                positionCircle.setInteractive();
+                this.input.setDraggable(positionCircle);
+                this.positionCircles.push(positionCircle)
 
-            positionCircle.on('drag', function (p, x, y) {
-                this.isPositioning = true;
+                positionCircle.on('drag', function (p, x, y) {
+                    this.isPositioning = true;
 
-                /* Updating elements position and values */
-                positionCircle.x = x;
-                positionCircle.y = y;
-                this.positionLabels[i].x = x;
-                this.positionLabels[i].y = y - (this.circleRadius * 1.75);
-                this.gripper.x = positionCircle.x;
-                this.gripper.y = positionCircle.y;
-                this.positionValues[i][1][0] = x;
-                this.positionValues[i][1][1] = y;
+                    /* Updating elements position and values */
+                    positionCircle.x = x;
+                    positionCircle.y = y;
+                    this.positionLabels[i].x = x;
+                    this.positionLabels[i].y = y - (this.circleRadius * 1.45);
+                    this.gripper.x = positionCircle.x;
+                    this.gripper.y = positionCircle.y;
+                    this.positionValues[i][1][0] = x;
+                    this.positionValues[i][1][1] = y;
 
-                this.children.bringToTop(positionCircle);
-                positionCircle.setFillStyle(0xff9c2b);
-
-                if (this.showArrows) {
+                    this.children.bringToTop(positionCircle);
+                    positionCircle.setFillStyle(0xff3e1c);
                     this.drawArrows();
-                }
+                    this.drawLabels();
+                }, this);
 
-                this.drawLabels();
-            }, this);
-
-            positionCircle.on('dragend', function() {
-                this.isPositioning = false;
-
-                if (this.showArrows) {
+                positionCircle.on('dragend', function() {
+                    this.isPositioning = false;
+                    this.drawCircles();
                     this.drawArrows();
-                }
-
-                this.drawLabels();
-                this.drawCircles();
-            }, this);
+                    this.drawLabels();
+                }, this);
+            }
         }
     }
 
     hideCircles() {
-        this.positionCircles.forEach(circle => circle.destroy());
+        if (!this.showCircles) {
+            this.positionCircles.forEach(circle => circle.destroy());
+        }
     }
 
     drawLabels() {
-        /* Get ordered positions of movement blocks
-        attached to starting block */
-        this.positionValues = getBlocklyPositions();
+        if (this.showCircles) {
+            /* Get ordered positions of movement blocks
+            attached to starting block */
+            this.positionValues = getBlocklyPositions();
 
-        /* Clear previous drawings */
-        this.positionLabels.forEach(label => label.destroy());
+            /* Clear previous drawings */
+            this.positionLabels.forEach(label => label.destroy());
 
-        for (let i = 0; i < this.positionValues.length; i++) {
-            var positionName = this.positionValues[i][0];
-            const positionCoordinates = this.positionValues[i][1];
+            for (let i = 0; i < this.positionValues.length; i++) {
+                var positionName = this.positionValues[i][0];
+                const positionCoordinates = this.positionValues[i][1];
 
-            const positionX = positionCoordinates[0];
-            const positionY = positionCoordinates[1];
+                const positionX = positionCoordinates[0];
+                const positionY = positionCoordinates[1];
 
-            const positionLabel = this.add.text(positionX, positionY - (this.circleRadius * 1.75), String(positionName), 
-                              { fontFamily: 'Arial', color: '#000', fontSize: '48px', fontWeight: 'bold'}).setOrigin(0.5);
-            this.children.bringToTop(positionLabel);
-            this.positionLabels.push(positionLabel);
+                const positionLabel = this.add.text(positionX, positionY - (this.circleRadius * 1.45), String(positionName), 
+                                { font: 'bold 48px Arial', color: '#fff'}).setOrigin(0.5);
+                positionLabel.setStroke('#000', 10);
+                this.children.bringToTop(positionLabel);
+                this.positionLabels.push(positionLabel);
+            }
         }
     }
 
     hideLabels() {
-        this.positionLabels.forEach(label => label.destroy());
+        if (!this.showCircles) {
+            this.positionLabels.forEach(label => label.destroy());
+        }
     }
 
     drawArrows() {
-        /* Get ordered positions of movement blocks
-        attached to starting block */
-        this.positionValues = getBlocklyPositions();
+        if (this.showArrows) {
+            /* Get ordered positions of movement blocks
+            attached to starting block */
+            this.positionValues = getBlocklyPositions();
 
-        /* Clear previous drawings */
-        this.directionGraphics.clear();
+            /* Clear previous drawings */
+            this.directionGraphics.clear();
+            
+            for (let i = 0; i < this.positionValues.length - 1; i++) {
+                const currentPosition = this.positionValues[i][1];
+                const nextPosition = this.positionValues[i + 1][1];
+
+                var angle = Phaser.Math.Angle.Between(currentPosition[0], currentPosition[1], nextPosition[0], nextPosition[1]);
+
+                var startPointX = currentPosition[0] + (this.circleRadius + 10) * Math.cos(angle);
+                var startPointY = currentPosition[1] + (this.circleRadius + 10)  * Math.sin(angle);
+                var endPointX = nextPosition[0] - (this.circleRadius + 10) * Math.cos(angle);
+                var endPointY = nextPosition[1] - (this.circleRadius + 10) * Math.sin(angle);
+
+                var lineThickness = 5;
         
-        for (let i = 0; i < this.positionValues.length - 1; i++) {
-            const currentPosition = this.positionValues[i][1];
-            const nextPosition = this.positionValues[i + 1][1];
+                /* Line */
+                this.directionGraphics.lineStyle(lineThickness, 0x121212, 0.25);
+                this.directionGraphics.beginPath()
+                this.directionGraphics.moveTo(startPointX, startPointY);
+                this.directionGraphics.lineTo(endPointX, endPointY);
+                this.directionGraphics.strokePath();
 
-            var angle = Phaser.Math.Angle.Between(currentPosition[0], currentPosition[1], nextPosition[0], nextPosition[1]);
-
-            var startPointX = currentPosition[0] + (this.circleRadius + 10) * Math.cos(angle);
-            var startPointY = currentPosition[1] + (this.circleRadius + 10)  * Math.sin(angle);
-            var endPointX = nextPosition[0] - (this.circleRadius + 10) * Math.cos(angle);
-            var endPointY = nextPosition[1] - (this.circleRadius + 10) * Math.sin(angle);
-
-            var lineThickness = 5;
-    
-            /* Line */
-            this.directionGraphics.lineStyle(lineThickness, 0x121212, 0.25);
-            this.directionGraphics.beginPath()
-            this.directionGraphics.moveTo(startPointX, startPointY);
-            this.directionGraphics.lineTo(endPointX, endPointY);
-            this.directionGraphics.strokePath();
-
-            /* Arrow */
-            var arrowSize = 50;
-            var endPointX = nextPosition[0] - (this.circleRadius + 5) * Math.cos(angle);
-            var endPointY = nextPosition[1] - (this.circleRadius + 5) * Math.sin(angle);
-            var pointA = new Phaser.Geom.Point(endPointX, endPointY);
-            var pointB = new Phaser.Geom.Point(endPointX + arrowSize * Math.cos(angle + Phaser.Math.DegToRad(150)), endPointY + arrowSize * Math.sin(angle + Phaser.Math.DegToRad(150)));
-            var pointC = new Phaser.Geom.Point(endPointX + arrowSize * Math.cos(angle + Phaser.Math.DegToRad(210)), endPointY + arrowSize * Math.sin(angle + Phaser.Math.DegToRad(210)));
-            this.directionGraphics.fillStyle(0x121212, 1);
-            this.directionGraphics.fillTriangle(pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y);
-            this.directionGraphics.closePath();
+                /* Arrow */
+                var arrowSize = 50;
+                var endPointX = nextPosition[0] - (this.circleRadius + 5) * Math.cos(angle);
+                var endPointY = nextPosition[1] - (this.circleRadius + 5) * Math.sin(angle);
+                var pointA = new Phaser.Geom.Point(endPointX, endPointY);
+                var pointB = new Phaser.Geom.Point(endPointX + arrowSize * Math.cos(angle + Phaser.Math.DegToRad(150)), endPointY + arrowSize * Math.sin(angle + Phaser.Math.DegToRad(150)));
+                var pointC = new Phaser.Geom.Point(endPointX + arrowSize * Math.cos(angle + Phaser.Math.DegToRad(210)), endPointY + arrowSize * Math.sin(angle + Phaser.Math.DegToRad(210)));
+                this.directionGraphics.fillStyle(0x121212, 1);
+                this.directionGraphics.fillTriangle(pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y);
+                this.directionGraphics.closePath();
+            }
+            this.children.bringToTop(this.directionGraphics);
         }
     }
 
     hideArrows() {
-        this.directionGraphics.clear();
+        if (!this.showArrows) {
+            this.directionGraphics.clear();
+        }
     }
 }
 

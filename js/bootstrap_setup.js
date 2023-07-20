@@ -76,15 +76,9 @@ function deletePosition(event) {
     removeBlocksWithPosition(positionKey);
 
     var currentScene = game.scene.getScene(phaserSceneName);
-
-    if (currentScene.showCircles) {
-        currentScene.drawCircles();
-        currentScene.drawLabels();
-    }
-
-    if (currentScene.showArrows) {
-        currentScene.drawArrows();
-    }
+    currentScene.drawCircles();
+    currentScene.drawLabels();
+    currentScene.drawArrows();
 
     loadPositionsForRemoval();
 }

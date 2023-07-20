@@ -70,7 +70,7 @@ Blockly.defineBlocksWithJsonArray([
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": 8,
+    "colour": 0,
     "tooltip": "",
     "helpUrl": "",
     "extensions": ["move_block_created"]
@@ -94,7 +94,7 @@ Blockly.defineBlocksWithJsonArray([
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": 90,
+    "colour": 120,
     "tooltip": "",
     "helpUrl": "",
     "extensions": []
@@ -146,7 +146,7 @@ const blocklyDiv = document.getElementById('blockly-workspace');
 const blocklyWorkspace = Blockly.inject(blocklyDiv, {
           toolbox: toolbox, zoom:
           {controls: true,
-          startScale: 1.5,
+          startScale: 1.25,
           maxScale: 3,
           minScale: 0.3,
           scaleSpeed: 1.2,
@@ -164,8 +164,8 @@ const blocklyWorkspace = Blockly.inject(blocklyDiv, {
 blocklyWorkspace.addChangeListener(onBlockChange);
 
 /* Define block colors */
-Blockly.HSV_SATURATION = 0.55;
-Blockly.HSV_VALUE = 0.55;
+Blockly.HSV_SATURATION = 0.90;
+Blockly.HSV_VALUE = 0.75;
 
 /* Define starting block (root) */
 var startingBlocks = document.getElementById("blocks");
@@ -240,14 +240,9 @@ function onBlockChange(event) {
     var currentScene = game.scene.getScene(phaserSceneName);
 
     if (currentScene) {
-      if (currentScene.showCircles) {
-        currentScene.drawCircles();
-        currentScene.drawLabels();
-      }
-  
-      if (currentScene.showArrows) {
-          currentScene.drawArrows();
-      }  
+      currentScene.drawCircles();
+      currentScene.drawLabels();
+      currentScene.drawArrows();
     }
   }
 }
