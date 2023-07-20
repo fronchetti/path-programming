@@ -82,7 +82,7 @@ Blockly.defineBlocksWithJsonArray([
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
-    "colour": 40,
+    "colour": 42,
     "tooltip": "",
     "helpUrl": "",
     "extensions": []
@@ -146,7 +146,7 @@ const blocklyDiv = document.getElementById('blockly-workspace');
 const blocklyWorkspace = Blockly.inject(blocklyDiv, {
           toolbox: toolbox, zoom:
           {controls: true,
-          startScale: 1.25,
+          startScale: 1.25  ,
           maxScale: 3,
           minScale: 0.3,
           scaleSpeed: 1.2,
