@@ -16,7 +16,7 @@ class RobotScene extends Phaser.Scene {
     preload() {
         this.load.spritesheet('gripper', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/gripper.png', { frameWidth: 256, frameHeight: 256 });
         this.load.spritesheet('boxes', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/boxes.png', { frameWidth: 256, frameHeight: 256 });
-        this.load.spritesheet('circles', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/circles.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('circles', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/circles.png', { frameWidth: 128, frameHeight: 128 });
         this.load.tilemapTiledJSON('map', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/sandbox.tmj');
         this.load.image('tileset', 'https://raw.githubusercontent.com/fronchetti/path-planning-web/main/assets/boxes.png');
     }
@@ -163,7 +163,7 @@ class RobotScene extends Phaser.Scene {
                 const positionY = positionCoordinates[1];
 
                 //const positionCircle = this.add.circle(positionX, positionY, this.circleRadius, 0x000);
-                const positionCircle = this.physics.add.sprite(positionX, positionY, 'circles', 1)
+                const positionCircle = this.physics.add.sprite(positionX, positionY, 'circles', 0)
                 positionCircle.setInteractive();
                 this.input.setDraggable(positionCircle);
                 this.positionCircles.push(positionCircle)
