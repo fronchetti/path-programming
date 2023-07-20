@@ -38,7 +38,7 @@ class RobotScene extends Phaser.Scene {
         this.gripper = this.physics.add.sprite(1024, 1024, 'gripper');
         this.gripper.setScale(1.5);
         this.gripper.setInteractive();
-        this.gripper.body.setSize(168, 168);
+        this.gripper.body.setSize(164, 164);
         this.gripper.setCollideWorldBounds(true);
         
         /* Container settings (used to group gripper and nearest box) */
@@ -163,7 +163,9 @@ class RobotScene extends Phaser.Scene {
                 const positionY = positionCoordinates[1];
 
                 //const positionCircle = this.add.circle(positionX, positionY, this.circleRadius, 0x000);
-                const positionCircle = this.physics.add.sprite(positionX, positionY, 'circles', 0)
+                const positionCircle = this.physics.add.sprite(positionX, positionY, 'circles', 0);
+                positionCircle.body.setSize(168, 168);
+
                 positionCircle.setInteractive();
                 this.input.setDraggable(positionCircle);
                 this.positionCircles.push(positionCircle)
