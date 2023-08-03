@@ -59,12 +59,17 @@ Blockly.defineBlocksWithJsonArray([
   },
   {
     "type": "move_to_position",
-    "message0": "Move robot to %1",
+    "message0": "%2 Move robot to %1",
     "args0": [
       {
         "type": "input_dummy",
         "name": "POSITION",
         "variable": "<somewhere>"
+      },
+      {
+        "type": "field_checkbox",
+        "name": "Breakpoint",
+        "checked": false
       }
     ],
     "inputsInline": false,
@@ -78,7 +83,14 @@ Blockly.defineBlocksWithJsonArray([
   /* Custom pick object block */
   {
     "type": "pick_object",
-    "message0": "Pick up object",
+    "message0": "%1 Pick up object",
+    "args0": [
+      {
+        "type": "field_checkbox",
+        "name": "Breakpoint",
+        "checked": false
+      }
+    ],
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
@@ -90,7 +102,14 @@ Blockly.defineBlocksWithJsonArray([
   /* Custom release object block */
   {
     "type": "release_object",
-    "message0": "Release object",
+    "message0": "%1 Release object",
+    "args0": [
+      {
+        "type": "field_checkbox",
+        "name": "Breakpoint",
+        "checked": false
+      }
+    ],
     "inputsInline": false,
     "previousStatement": null,
     "nextStatement": null,
@@ -166,6 +185,7 @@ blocklyWorkspace.addChangeListener(onBlockChange);
 /* Define block colors */
 Blockly.HSV_SATURATION = 0.90;
 Blockly.HSV_VALUE = 0.75;
+Blockly.FieldCheckbox.CHECK_CHAR = "✔";
 
 /* Define starting block (root) */
 var startingBlocks = document.getElementById("blocks");

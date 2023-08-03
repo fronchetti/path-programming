@@ -20,28 +20,32 @@
             <h1>Sandbox</h1>
             <p>Use this space as a playground.</p>
           </div>
-
           <div class="row">
-                <div class="language col-md-8 col-sm-12">
-                    <div id="blockly-workspace" class="blockly-workspace"></div>
+            <div class="language col-md-8 col-sm-12">
+                <div id="blockly-workspace" class="blockly-workspace"></div>
+            </div>
+            <div class="simulation col-md-4 col-sm-12">
+              <div class="debugging">
+                <!-- Debugging -->
+                <div class="row show-options">
+                  <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                    <input type="checkbox" class="btn-check" id="show-positions-button" autocomplete="off">
+                    <label class="btn btn-outline-dark" for="show-positions-button"><b>Show Positions</b></label>
+                    <input type="checkbox" class="btn-check" id="show-directions-button" autocomplete="off">
+                    <label class="btn btn-outline-dark" for="show-directions-button"><b>Show Directions</b></label>
+                    <input type="checkbox" class="btn-check" id="show-collisions-button" autocomplete="off">
+                    <label class="btn btn-outline-dark" for="show-collisions-button"><b>Show Collisions</b></label>
+                  </div>
                 </div>
-                <div class="simulation col-md-4 col-sm-12">
-                  <div class="row show-options">
-                    <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                      <input type="checkbox" class="btn-check" id="show-positions-button" autocomplete="off">
-                      <label class="btn btn-outline-dark" for="show-positions-button"><b>Show Positions</b></label>
-                    
-                      <input type="checkbox" class="btn-check" id="show-directions-button" autocomplete="off">
-                      <label class="btn btn-outline-dark" for="show-directions-button"><b>Show Directions</b></label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="display">
-                      <div id="game-canvas" class="game-canvas"></div>
-                    </div>  
-                  </div>
+                </div>
+                <!-- Phaser -->
+                <div class="row">
+                  <div class="display">
+                    <div id="game-canvas" class="game-canvas"></div>
+                 </div>  
                 </div>
             </div>
+          </div>
         </div>
 
         <xml id="toolbox" style="display: none">

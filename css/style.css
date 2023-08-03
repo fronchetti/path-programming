@@ -19,10 +19,15 @@ body {
 .display {
   background-color: rgb(205, 205, 205);
   border-radius: 1.5rem;
-  margin-top: 15px;
+  margin-bottom: 15px;
   padding: 10px;
 }
 
 .show-options {
   margin-bottom: 10px;
+}
+
+.debugging {
+  background-color: rgb(215, 215, 215);
+  border-radius: 5px;
 }
