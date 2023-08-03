@@ -164,7 +164,7 @@ class RobotScene extends Phaser.Scene {
 
                 //const positionCircle = this.add.circle(positionX, positionY, this.circleRadius, 0x000);
                 const positionCircle = this.physics.add.sprite(positionX, positionY, 'circles', 0);
-                positionCircle.body.setSize(168, 168);
+                positionCircle.setScale(0.5);
 
                 positionCircle.setInteractive();
                 this.input.setDraggable(positionCircle);
